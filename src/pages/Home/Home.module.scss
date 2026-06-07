@@ -1,0 +1,207 @@
+@import "../../styles/variables";
+
+.introContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.introCard {
+  width: 100%;
+  max-width: 420px;
+  background-color: #1a1b23;
+  border: 1px solid #2e303a;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.brandBadgeHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.companyInitialLogo {
+  width: 32px;
+  height: 32px;
+  background-color: $primary-blue;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 0.25rem;
+}
+
+.globalLogo {
+  background-color: #4b5563; // Gris neutro si no viene del hub
+}
+
+.metaTenantName {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.introTitle {
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+
+  label {
+    font-size: 0.85rem;
+    color: #9ca3af;
+  }
+}
+
+.dateInput {
+  background-color: #111217;
+  border: 1px solid #2e303a;
+  color: white;
+  padding: 0.6rem;
+  border-radius: 0.375rem;
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: $primary-blue;
+    outline: none;
+  }
+}
+
+.errorAlert {
+  background: rgba(#f87171, 0.1);
+  border: 1px solid rgba(#f87171, 0.3);
+  color: #f87171;
+  padding: 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.startBtn {
+  background-color: $primary-blue;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+  &:disabled {
+    background-color: #2e303a;
+    cursor: not-allowed;
+  }
+}
+
+.mainCatalogContent {
+  margin-top: 1rem;
+}
+
+.categoryTabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid #2e303a;
+  padding-bottom: 0.5rem;
+}
+
+.tabBtn {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0.25rem;
+
+  &:hover {
+    color: white;
+  }
+}
+
+.tabActive {
+  background-color: rgba($primary-blue, 0.1);
+  color: $primary-blue;
+}
+
+.sectionHeader {
+  font-size: 1.1rem;
+  color: #f3f4f6;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.productsContainer {
+  display: grid;
+  gap: 1rem;
+}
+
+.portraitLayout {
+  grid-template-columns: 1fr;
+}
+
+.landscapeLayout {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.emptyCatalog {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  text-align: left;
+  padding: 1rem 0;
+}
+
+.industrialLoading {
+  padding: 40px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: monospace;
+  text-align: center;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.industrialErrorCard {
+  padding: 40px;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-radius: 12px;
+  border: 1px solid #fee2e2;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.6;
+
+  small {
+    display: block;
+    margin-top: 8px;
+    color: #7f1d1d;
+    font-weight: bold;
+  }
+}

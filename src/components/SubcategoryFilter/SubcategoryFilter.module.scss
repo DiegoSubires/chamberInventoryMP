@@ -1,0 +1,71 @@
+// src/components/SubcategoryFilter/SubcategoryFilter.module.scss
+@import "../../styles/variables"; // Ajusta la ruta a tus variables globales si es necesario
+
+.subFilterContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.25rem 0;
+}
+
+.subTabBtn {
+  background: #1e202a; // Fondo oscuro integrado con el dashboard
+  border: 1px solid #2e303a;
+  color: #9ca3af;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px; // Aspecto redondeado tipo cápsula para diferenciar de categorías
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    color: #ffffff;
+    border-color: #4b5563;
+  }
+}
+
+// Estilo activo base
+.tabActive {
+  font-weight: 700;
+}
+
+// 🎨 Paleta provisional de colores específicos para los estados activos:
+
+.allTab.tabActive {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.color1.tabActive {
+  background-color: rgba(#10b981, 0.15); // Esmeralda
+  color: #10b981;
+  border-color: #10b981;
+}
+
+.color2.tabActive {
+  background-color: rgba(#f59e0b, 0.15); // Ámbar / Naranja
+  color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.color3.tabActive {
+  background-color: rgba(#ec4899, 0.15); // Fucsia
+  color: #ec4899;
+  border-color: #ec4899;
+}
+
+.color4.tabActive {
+  background-color: rgba(#8b5cf6, 0.15); // Violeta / Morado
+  color: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.color5.tabActive {
+  background-color: rgba(#06b6d4, 0.15); // Cian
+  color: #06b6d4;
+  border-color: #06b6d4;
+}

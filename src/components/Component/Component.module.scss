@@ -1,0 +1,25 @@
+@import "../../styles/variables";
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+  width: fit-content;
+}
+
+.granel {
+  background-color: rgba($primary-blue, 0.1);
+  color: $primary-blue;
+  border-color: rgba($primary-blue, 0.2);
+}
+
+.pequena {
+  background-color: rgba(#f2c94c, 0.1);
+  color: #f2c94c;
+  border-color: rgba(#f2c94c, 0.2);
+}

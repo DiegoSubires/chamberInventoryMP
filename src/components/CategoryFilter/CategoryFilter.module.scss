@@ -1,0 +1,30 @@
+@import "../../styles/variables";
+
+.filterContainer {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid #2e303a;
+  padding-bottom: 0.5rem;
+}
+
+.tabBtn {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0.25rem;
+
+  &:hover {
+    color: white;
+  }
+}
+
+.tabActive {
+  background-color: rgba($primary-blue, 0.1);
+  color: $primary-blue;
+}

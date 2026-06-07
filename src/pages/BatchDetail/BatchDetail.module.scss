@@ -1,0 +1,187 @@
+// src/pages/BatchDetail/BatchDetail.module.scss
+@import "../../styles/variables";
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0.5rem;
+}
+
+/* 🪄 Cabecera única y limpia con el estilo traslúcido frosted-glass de planta */
+.focusedHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background-color: $bg-card;
+  border: 1px solid rgba($border-color, 0.7);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.backButton {
+  background-color: rgba($border-color, 0.3);
+  border: 1px solid $border-color;
+  color: $text-white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $primary-blue;
+    border-color: $primary-blue;
+  }
+}
+
+.productCodeHeader {
+  font-family: monospace;
+  color: $text-white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  background-color: rgba($bg-input, 0.5);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba($border-color, 0.4);
+}
+
+/* 📦 Tarjeta principal del producto */
+.productMainCard {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: $text-white;
+    font-size: 1.5rem;
+  }
+}
+
+.factorLabel {
+  font-size: 0.9rem;
+  color: $text-gray;
+  margin-bottom: 1.5rem;
+
+  strong {
+    color: $primary-blue;
+  }
+}
+
+.batchesSection {
+  margin-bottom: 1.5rem;
+}
+
+/* ➕ Secciones de control para añadir lotes */
+.newBatchCreatorCard {
+  border: 2px dashed rgba($border-color, 0.6);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  background-color: rgba($bg-input, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+.cardBatchHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba($border-color, 0.3);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.newBatchTitle {
+  font-weight: bold;
+  color: $text-gray;
+}
+
+.verticalFormBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobileInputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  label {
+    font-size: 0.85rem;
+    color: $text-gray;
+    font-weight: 600;
+  }
+  input {
+    padding: 0.6rem;
+    background-color: rgba($bg-input, 0.4);
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: $text-white;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.giantBlueAddButton {
+  width: 100%;
+  background-color: $primary-blue;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #2563eb;
+  }
+}
+
+/* 📉 Footer rediseñado: Extremos perfectos (Texto Izquierda, Unidades Izquierda) */
+.formFooterOnlyTotals {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba($border-color, 0.5);
+  display: flex;
+  justify-content: space-between; // 🎯 Hace que los elementos se vayan a los extremos
+  align-items: center;
+}
+
+.totalLabel {
+  font-size: 1rem;
+  color: $text-gray;
+  font-weight: 600;
+  text-transform: none; // Asegura que respete "Total Producto:" en lugar de mayúsculas forzadas
+}
+
+.totalValue {
+  font-size: 1.25rem;
+  color: $text-white;
+  font-weight: 700;
+}
+
+.loading {
+  color: $text-gray;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.productMeta {
+  margin-left: 0;
+}

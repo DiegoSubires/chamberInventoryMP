@@ -1,0 +1,44 @@
+$bg-main: #0f172a;
+$bg-card: #1e293b;
+$border-color: #334155;
+$text-primary: #f8fafc;
+$text-secondary: #94a3b8;
+$accent-color: #3b82f6;
+$success-color: #10b981;
+
+$bg-dark: #12131a;
+$bg-card: #1c1e29;
+$bg-input: #252836;
+$border-color: #2e3142;
+$text-white: #ffffff;
+$text-gray: #9295a5;
+$primary-blue: #2f80ed;
+$danger-red: #eb5757;
+$success-green: #27ae60;
+$font-stack:
+  system-ui,
+  -apple-system,
+  sans-serif;
+
+/* ==========================================================================
+   🧱 MÓDULO DE ESTILOS COMPARTIDOS TRACESYNC (CÁMARAS DE PLANTA)
+   ========================================================================== */
+
+// 1. Mixin para calcar el efecto contenedor frosted-glass que te gusta del layout/cards
+@mixin card-industrial-base {
+  background-color: #1e293b; // $bg-card original oscuro
+  border: 1px solid rgba(255, 255, 255, 0.1); // $border-color sutil
+  border-radius: 1rem;
+  padding: 1.25rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+}
+
+// 2. Mixin para los títulos destacados de planta
+@mixin titulo-seccion-maestro {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}

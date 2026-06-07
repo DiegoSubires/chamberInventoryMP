@@ -1,0 +1,59 @@
+@import "../../styles/variables";
+
+.card {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 1rem;
+  padding: 1.5rem; // Un poco más de aire al ser un botón único
+  transition: all 0.2s ease;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+
+  // Efecto de feedback visual al pasar el ratón o pulsar en pantallas táctiles
+  &:hover {
+    border-color: $primary-blue;
+    background-color: rgba($primary-blue, 0.05);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.summaryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.descBlock {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.alternativeText {
+  font-weight: 700;
+  font-size: 1.2rem; // Un poco más grande para facilitar la lectura rápida
+  color: $text-white;
+  text-transform: uppercase;
+}
+
+.totalBadge {
+  font-size: 1.1rem;
+  color: $primary-blue;
+  font-weight: 700;
+  white-space: nowrap;
+  background: rgba($primary-blue, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba($primary-blue, 0.2);
+}
+
+// Layout adaptativo opcional si lo necesitas separar por filas
+.landscapeCard {
+  padding: 1.75rem 2rem;
+}
