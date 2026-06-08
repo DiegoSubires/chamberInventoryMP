@@ -195,7 +195,7 @@ export const InventoryService = {
   /**
    * 1a. Carga todo el catálogo blindando cualquier respuesta inesperada del servidor (para Home)
    */
-  /*async fetchCatalogWithActiveCounts(
+  async fetchCatalogWithActiveCounts(
     tenantId: string,
     workingDate: string,
   ): Promise<Product[]> {
@@ -206,25 +206,12 @@ export const InventoryService = {
       data,
     );
     return Array.isArray(data) ? data.map(mapRawToDomain) : [];
-  },*/
-  async fetchCatalogWithActiveCounts(
-    tenantId: string,
-    workingDate: string,
-  ): Promise<Product[]> {
-    const url = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-    const rawData = await apiClient(url);
-    console.log(
-      `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
-      rawData,
-    );
-    // Aplicamos el mapeo a todo el array
-    return Array.isArray(rawData) ? rawData.map(mapRawToDomain) : [];
   },
 
   /**
    * 1b. Carga solo un producto del catálogo, blindando cualquier respuesta inesperada del servidor (para BatchDetail)
    */
-  /*async fetchProductWithInventoryCounts(
+  async fetchProductWithInventoryCounts(
     productId: string,
     tenantId: string,
     workingDate: string,
@@ -260,27 +247,6 @@ export const InventoryService = {
       );
       return null;
     }
-  },*/
-  async fetchProductWithInventoryCounts(
-    productId: string,
-    tenantId: string,
-  ): Promise<Product | null> {
-    const workingDate =
-      localStorage.getItem("chamber_inventory_working_date") ?? "";
-    // Usamos el endpoint que configuramos en el backend con el productId
-    const url = `/api/inventory/products-with-counts/${productId}?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-
-    const rawData = await apiClient(url);
-
-    console.log(
-      `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
-      rawData,
-    );
-
-    if (!rawData) return null;
-
-    // Aplicamos el mapeo a un solo objeto
-    return mapRawToDomain(rawData);
   },
 
   /**
