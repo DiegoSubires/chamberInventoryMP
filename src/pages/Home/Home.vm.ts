@@ -8,9 +8,11 @@ export interface Product {
   category: string;
   subcategory?: string;
   unitsPerCrate: number;
+  totalCrates?: number;
   batches?: BatchLine[];
   sortOrder?: number;
   totalUnits?: number;
+  visible?: boolean;
 }
 
 export interface HomeState {

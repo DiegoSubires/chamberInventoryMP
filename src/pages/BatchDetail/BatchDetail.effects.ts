@@ -164,7 +164,7 @@ export function useBatchDetailEffects({
 
 // src/pages/BatchDetail/BatchDetail.effects.ts
 import { useEffect } from "react";
-import { ProductService } from "../../services/product.service";
+import { InventoryService } from "../../services/inventory.service";
 import { type ProductDetail } from "./BatchDetail.vm";
 
 interface UseBatchDetailEffectsProps {
@@ -187,22 +187,20 @@ export function useBatchDetailEffects({
       if (!productId || !tenantId) return;
       try {
         setLoading(true);
-        const fetchedProduct = await ProductService.fetchProductById(
+
+        // El servicio ya nos devuelve el objeto listo y sanitizado
+        const productData = await InventoryService.fetchProductInventoryDetail(
           productId,
           tenantId,
         );
 
-        if (fetchedProduct && isMounted) {
-          const safeProductDetail: ProductDetail = {
-            ...fetchedProduct,
-            batches: fetchedProduct.batches || [],
-          };
-
-          hydrateState(safeProductDetail);
+        if (productData && isMounted) {
+          // Ya no hace falta mapear nada aquí, el servicio lo hizo
+          hydrateState(productData);
         }
       } catch (error) {
         console.error(
-          "❌ [BatchDetail.effects] Falló la carga asíncrona tipada:",
+          "❌ [BatchDetail.effects] Error al cargar detalle:",
           error,
         );
       } finally {

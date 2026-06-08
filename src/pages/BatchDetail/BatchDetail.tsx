@@ -206,11 +206,6 @@ export default function BatchDetail({
       </div>
 
       <div className={styles.mainContentLayout}>
-        <h2 className={styles.sectionSubtitle}>
-          Entradas de Lote Activas —{" "}
-          {state.product.alternativeDescription || state.product.description}
-        </h2>
-
         <div className={styles.mainLayoutGrid}>
           <div className={styles.batchesSection}>
             {state.batchLines.map((line, index) => (

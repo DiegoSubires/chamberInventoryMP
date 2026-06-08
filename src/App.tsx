@@ -171,9 +171,6 @@ export default function App() {
     }
   };
 
-  // 🔍 LOG 2: Verificar qué datos se le inyectan finalmente al LayoutApp
-  console.log("🏗️ [App.tsx] Renderizando LayoutApp con sesión:", session);
-
   return (
     <LayoutApp
       tenantId={session.tenantId}
