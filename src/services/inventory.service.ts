@@ -29,7 +29,7 @@ export interface BackendBatchLine {
   elapsedDays: number;
 }
 
-// 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
+/*/ 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
 const mapRawToDomain = (prod: RawProductWithCounts): Product => {
   console.log(
     `[Service.prod.batches] Mapeando producto: ${prod.id || prod._id}, Lotes crudos:`,
@@ -73,6 +73,38 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
   );
 
   return mapped;
+};*/
+
+const mapRawToDomain = (prod: RawProductWithCounts): Product => {
+  // Aseguramos que batches sea un array
+  const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
+
+  // Mapeamos los lotes del Backend a lo que espera el Frontend (BatchLine)
+  const mappedBatches: BatchLine[] = rawBatches.map((b) => ({
+    id: b.id || `batch-${Date.now()}-${Math.random()}`,
+    batchCode: b.batch || "", // Conversión: Backend 'batch' -> UI 'batchCode'
+    packingDate: b.packingDate || "",
+    elapsedDays: b.elapsedDays || 0,
+    crates: b.crates || 0,
+    looseUnits: b.looseUnits || 0,
+    totalUnits: b.quantity || 0, // Conversión: Backend 'quantity' -> UI 'totalUnits'
+  }));
+
+  // Retornamos el objeto compatible con la interfaz Product
+  return {
+    id: prod.id || prod._id || "",
+    code: prod.code || "",
+    description: prod.description || "",
+    alternativeDescription: prod.alternativeDescription || "",
+    category: prod.category || "SIN CATEGORIA",
+    subcategory: prod.subcategory || "",
+    unitsPerCrate: prod.unitsPerCrate || 0,
+    visible: prod.visible !== false,
+    sortOrder: prod.sortOrder || 0,
+    batches: mappedBatches,
+    totalCrates: prod.totalCrates || 0,
+    totalUnits: prod.totalUnits || 0,
+  };
 };
 
 /*export const InventoryService = {
@@ -163,7 +195,7 @@ export const InventoryService = {
   /**
    * 1a. Carga todo el catálogo blindando cualquier respuesta inesperada del servidor (para Home)
    */
-  async fetchCatalogWithActiveCounts(
+  /*async fetchCatalogWithActiveCounts(
     tenantId: string,
     workingDate: string,
   ): Promise<Product[]> {
@@ -174,12 +206,25 @@ export const InventoryService = {
       data,
     );
     return Array.isArray(data) ? data.map(mapRawToDomain) : [];
+  },*/
+  async fetchCatalogWithActiveCounts(
+    tenantId: string,
+    workingDate: string,
+  ): Promise<Product[]> {
+    const url = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+    const rawData = await apiClient(url);
+    console.log(
+      `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
+      rawData,
+    );
+    // Aplicamos el mapeo a todo el array
+    return Array.isArray(rawData) ? rawData.map(mapRawToDomain) : [];
   },
 
   /**
    * 1b. Carga solo un producto del catálogo, blindando cualquier respuesta inesperada del servidor (para BatchDetail)
    */
-  async fetchProductWithInventoryCounts(
+  /*async fetchProductWithInventoryCounts(
     productId: string,
     tenantId: string,
     workingDate: string,
@@ -215,6 +260,27 @@ export const InventoryService = {
       );
       return null;
     }
+  },*/
+  async fetchProductById(
+    productId: string,
+    tenantId: string,
+  ): Promise<Product | null> {
+    const workingDate =
+      localStorage.getItem("chamber_inventory_working_date") ?? "";
+    // Usamos el endpoint que configuramos en el backend con el productId
+    const url = `/api/inventory/products-with-counts/${productId}?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+
+    const rawData = await apiClient(url);
+
+    console.log(
+      `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
+      rawData,
+    );
+
+    if (!rawData) return null;
+
+    // Aplicamos el mapeo a un solo objeto
+    return mapRawToDomain(rawData);
   },
 
   /**
