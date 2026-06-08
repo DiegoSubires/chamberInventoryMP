@@ -1,5 +1,5 @@
 // src/components/AppRouter/AppRouter.tsx
-import { HashRouter } from "react-router-dom";
+//import { HashRouter } from "react-router-dom";
 import { Home } from "../../pages/Home/Home";
 import BatchDetail from "../../pages/BatchDetail/BatchDetail";
 import { type UserSession } from "../../types/auth.types";
@@ -70,23 +70,21 @@ export function AppRouter({
   return <div className={styles.routerWrapper}>{renderScreen()}</div>;*/
 
   return (
-    <HashRouter>
-      <div className={styles.routerWrapper}>
-        {currentScreen === "CATALOG" ? (
-          <Home
-            userSession={userSession}
-            onNavigate={onNavigate}
-            onRegisterFinalizeAction={onRegisterFinalizeAction}
-          />
-        ) : (
-          <BatchDetail
-            productId={selectedProductId || ""}
-            tenantId={userSession.tenantId}
-            onBack={() => onNavigate("CATALOG", null)}
-            onRegisterSaveAction={onRegisterSaveAction}
-          />
-        )}
-      </div>
-    </HashRouter>
+    <div className={styles.routerWrapper}>
+      {currentScreen === "CATALOG" ? (
+        <Home
+          userSession={userSession}
+          onNavigate={onNavigate}
+          onRegisterFinalizeAction={onRegisterFinalizeAction}
+        />
+      ) : (
+        <BatchDetail
+          productId={selectedProductId || ""}
+          tenantId={userSession.tenantId}
+          onBack={() => onNavigate("CATALOG", null)}
+          onRegisterSaveAction={onRegisterSaveAction}
+        />
+      )}
+    </div>
   );
 }
