@@ -242,47 +242,53 @@ export function useBatchDetailEffects({
 
     async function loadData() {
       if (!productId || !tenantId) return;
-
       try {
         setLoading(true);
 
-        // Obtenemos la fecha de trabajo para pasarla al servicio
-        const workingDate =
-          localStorage.getItem("chamber_inventory_working_date") || "";
-
-        // Llamamos al nuevo servicio reforzado
         const fetchedProduct =
-          await InventoryService.fetchProductWithInventoryCounts(
+          await InventoryService.fetchProductInventoryDetail(
             productId,
             tenantId,
-            workingDate,
           );
 
+        // 🛡️ AÑADIR ESTE LOG PARA DEPURAR
         console.log("🔍 [Debug] Producto recibido:", fetchedProduct);
 
-        // Si fetchedProduct es null, la función ya manejó el error en el servicio.
-        // Aquí solo hidratamos si tenemos datos.
-        if (fetchedProduct && isMounted) {
-          // 🎯 ADAPTADOR: Transformamos Product (modelo de servicio) a ProductDetail (modelo de vista)
-          // Esto soluciona el error de tipos al garantizar que 'batches' sea siempre un array.
+        // 🛡️ BLINDAJE: Verificamos que el objeto exista
+        if (!fetchedProduct) {
+          console.error(
+            "❌ El servicio devolvió null para el producto:",
+            productId,
+          );
+          return; // Salimos si no hay datos
+        }
+
+        if (isMounted) {
+          // 🎯 Mapeo seguro
           const productDetail: ProductDetail = {
-            id: fetchedProduct.id,
-            code: fetchedProduct.code,
-            description: fetchedProduct.description,
-            alternativeDescription: fetchedProduct.alternativeDescription,
-            category: fetchedProduct.category,
-            unitsPerCrate: fetchedProduct.unitsPerCrate,
-            batches: fetchedProduct.batches || [], // Fuerza a que sea array, eliminando el undefined
+            id: fetchedProduct.id || "",
+            code: fetchedProduct.code || "S/C",
+            description: fetchedProduct.description || "Sin descripción",
+            alternativeDescription: fetchedProduct.alternativeDescription || "",
+            category: fetchedProduct.category || "SIN CATEGORIA",
+            unitsPerCrate: fetchedProduct.unitsPerCrate || 0,
+            batches: Array.isArray(fetchedProduct.batches)
+              ? fetchedProduct.batches
+              : [],
           };
 
           hydrateState(productDetail);
         }
       } catch (error) {
-        console.error("❌ [BatchDetail.effects] Error inesperado:", error);
+        console.error(
+          "❌ [BatchDetail.effects] Error crítico al cargar:",
+          error,
+        );
       } finally {
         if (isMounted) setLoading(false);
       }
     }
+
     loadData();
     return () => {
       isMounted = false;
