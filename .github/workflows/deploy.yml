@@ -19,6 +19,7 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: |
+          rm -rf dist
           npm install
           npm run build
       - name: Deploy
