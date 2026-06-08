@@ -165,13 +165,13 @@ export function useBatchDetailEffects({
 // src/pages/BatchDetail/BatchDetail.effects.ts
 import { useEffect } from "react";
 import { InventoryService } from "../../services/inventory.service";
-import { type ProductDetail } from "./BatchDetail.vm";
+import { type Product } from "../Home/Home.vm";
 
 interface UseBatchDetailEffectsProps {
   productId: string;
   tenantId: string;
   setLoading: (loading: boolean) => void;
-  hydrateState: (data: ProductDetail) => void;
+  hydrateState: (data: Product) => void;
 }
 
 export function useBatchDetailEffects({
@@ -189,14 +189,20 @@ export function useBatchDetailEffects({
         setLoading(true);
 
         // El servicio ya nos devuelve el objeto listo y sanitizado
-        const productData = await InventoryService.fetchProductInventoryDetail(
-          productId,
-          tenantId,
+        const fetchedProduct =
+          await InventoryService.fetchProductInventoryDetail(
+            productId,
+            tenantId,
+          );
+
+        console.log(
+          `[Effect] Producto recibido en BatchDetail:`,
+          fetchedProduct,
         );
 
-        if (productData && isMounted) {
+        if (fetchedProduct && isMounted) {
           // Ya no hace falta mapear nada aquí, el servicio lo hizo
-          hydrateState(productData);
+          hydrateState(fetchedProduct);
         }
       } catch (error) {
         console.error(

@@ -31,7 +31,16 @@ export interface BackendBatchLine {
 
 // 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
 const mapRawToDomain = (prod: RawProductWithCounts): Product => {
+  console.log(
+    `[Service.prod.batches] Mapeando producto: ${prod.id || prod._id}, Lotes crudos:`,
+    prod.batches,
+  );
+
   const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
+  console.log(
+    `[Service.rawBatches] Mapeando producto: ${prod.id || prod._id}, Lotes crudos:`,
+    rawBatches,
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const safeBatches: BatchLine[] = rawBatches.map((b: any) => ({
@@ -44,7 +53,7 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
     elapsedDays: Number(b.elapsedDays ?? 0),
   }));
 
-  return {
+  const mapped = {
     id: prod.id || prod._id || "",
     code: prod.code || "S/C",
     description: prod.description || "Sin descripción",
@@ -58,6 +67,12 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
     totalCrates: Number(prod.totalCrates || 0),
     totalUnits: Number(prod.totalUnits || 0),
   };
+
+  console.log(
+    `[Service.mapped] Producto final mapeado: ${mapped.id}, Total Unidades: ${mapped.totalUnits}`,
+  );
+
+  return mapped;
 };
 
 /*export const InventoryService = {
@@ -154,6 +169,10 @@ export const InventoryService = {
   ): Promise<Product[]> {
     const endpoint = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
     const data: RawProductWithCounts[] = await apiClient(endpoint);
+    console.log(
+      `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
+      data,
+    );
     return Array.isArray(data) ? data.map(mapRawToDomain) : [];
   },
 
@@ -396,10 +415,11 @@ export const InventoryService = {
   async fetchProductInventoryDetail(
     productId: string,
     tenantId: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<any> {
-    // Al ser un detalle de inventario, usamos la ruta de productos pero centralizada aquí
-    const endpoint = `/api/products/${productId}?tenant=${encodeURIComponent(tenantId)}`;
-    return await apiClient(endpoint);
+  ): Promise<Product | null> {
+    const workingDate = localStorage.getItem("chamber_inventory_working_date");
+    const url = `/api/inventory/products/${productId}?tenant=${tenantId}&date=${workingDate}`;
+    const data = await apiClient(url);
+    console.log(`[Service] Respuesta Detail (API):`, data); // 🔍 LOG 4
+    return data ? mapRawToDomain(data) : null;
   },
 };
