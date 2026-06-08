@@ -261,7 +261,7 @@ export const InventoryService = {
       return null;
     }
   },*/
-  async fetchProductById(
+  async fetchProductWithInventoryCounts(
     productId: string,
     tenantId: string,
   ): Promise<Product | null> {
