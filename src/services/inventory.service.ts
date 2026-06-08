@@ -29,7 +29,7 @@ export interface BackendBatchLine {
   elapsedDays: number;
 }
 
-/*/ 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
+// 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
 const mapRawToDomain = (prod: RawProductWithCounts): Product => {
   console.log(
     `[Service.prod.batches] Mapeando producto: ${prod.id || prod._id}, Lotes crudos:`,
@@ -73,38 +73,6 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
   );
 
   return mapped;
-};*/
-
-const mapRawToDomain = (prod: RawProductWithCounts): Product => {
-  // Aseguramos que batches sea un array
-  const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
-
-  // Mapeamos los lotes del Backend a lo que espera el Frontend (BatchLine)
-  const mappedBatches: BatchLine[] = rawBatches.map((b) => ({
-    id: b.id || `batch-${Date.now()}-${Math.random()}`,
-    batchCode: b.batch || "", // Conversión: Backend 'batch' -> UI 'batchCode'
-    packingDate: b.packingDate || "",
-    elapsedDays: b.elapsedDays || 0,
-    crates: b.crates || 0,
-    looseUnits: b.looseUnits || 0,
-    totalUnits: b.quantity || 0, // Conversión: Backend 'quantity' -> UI 'totalUnits'
-  }));
-
-  // Retornamos el objeto compatible con la interfaz Product
-  return {
-    id: prod.id || prod._id || "",
-    code: prod.code || "",
-    description: prod.description || "",
-    alternativeDescription: prod.alternativeDescription || "",
-    category: prod.category || "SIN CATEGORIA",
-    subcategory: prod.subcategory || "",
-    unitsPerCrate: prod.unitsPerCrate || 0,
-    visible: prod.visible !== false,
-    sortOrder: prod.sortOrder || 0,
-    batches: mappedBatches,
-    totalCrates: prod.totalCrates || 0,
-    totalUnits: prod.totalUnits || 0,
-  };
 };
 
 /*export const InventoryService = {
@@ -195,7 +163,7 @@ export const InventoryService = {
   /**
    * 1a. Carga todo el catálogo blindando cualquier respuesta inesperada del servidor (para Home)
    */
-  /*async fetchCatalogWithActiveCounts(
+  async fetchCatalogWithActiveCounts(
     tenantId: string,
     workingDate: string,
   ): Promise<Product[]> {
@@ -206,58 +174,25 @@ export const InventoryService = {
       data,
     );
     return Array.isArray(data) ? data.map(mapRawToDomain) : [];
-  },*/
-  async fetchCatalogWithActiveCounts(
-    tenantId: string,
-    workingDate: string,
-  ): Promise<Product[]> {
-    const url = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-    const rawData = await apiClient(url);
-    console.log(
-      `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
-      rawData,
-    );
-    // Aplicamos el mapeo a todo el array
-    return Array.isArray(rawData) ? rawData.map(mapRawToDomain) : [];
   },
 
   /**
-   * 1b. Carga solo un producto del catálogo, blindando cualquier respuesta inesperada del servidor (para BatchDetail)
+   * 1a. Carga solo un producto del catálogo, blindando cualquier respuesta inesperada del servidor (para BatchDetail)
    */
   async fetchProductWithInventoryCounts(
     productId: string,
     tenantId: string,
     workingDate: string,
   ): Promise<Product | null> {
+    // Si tu backend tiene un endpoint de detalle, úsalo aquí.
+    // Si NO tiene, puedes filtrar el endpoint de catálogo, PERO el backend debería soportar /products-with-counts/${productId}
     const endpoint = `/api/inventory/products-with-counts/${productId}?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
 
     try {
-      const data = await apiClient(endpoint);
-
-      console.log(
-        `[Service.fetchProductWithInventoryCounts] Respuesta Home (API):`,
-        data,
-      );
-
-      // ✅ BLINDAJE: Verificamos que 'data' sea un objeto real y no esté vacío/nulo.
-      // 1. !data: elimina nulos o undefined.
-      // 2. typeof data !== 'object': asegura que no sea un primitivo (número, string, bool).
-      // 3. Array.isArray(data): previene errores si el backend devuelve una lista en lugar de un objeto.
-      if (!data || typeof data !== "object" || Array.isArray(data)) {
-        console.warn(
-          `[Service] Respuesta inesperada del servidor para producto ${productId}:`,
-          data,
-        );
-        return null;
-      }
-
-      // Ahora estamos seguros de pasarle un objeto válido al mapeador
-      return mapRawToDomain(data as RawProductWithCounts);
+      const data: RawProductWithCounts = await apiClient(endpoint);
+      return mapRawToDomain(data);
     } catch (e) {
-      console.error(
-        `[Service] Error crítico al obtener detalle del producto ${productId}:`,
-        e,
-      );
+      console.error("Error al obtener detalle del producto:", e);
       return null;
     }
   },
@@ -481,6 +416,7 @@ export const InventoryService = {
     productId: string,
     tenantId: string,
   ): Promise<Product | null> {
+    // ⚠️ ATENCIÓN AQUÍ: Asegúrate de pasar la fecha si el backend la necesita
     const workingDate = localStorage.getItem("chamber_inventory_working_date");
     const url = `/api/inventory/products/${productId}?tenant=${tenantId}&date=${workingDate}`;
     const data = await apiClient(url);
