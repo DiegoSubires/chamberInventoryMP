@@ -165,13 +165,13 @@ export function useBatchDetailEffects({
 // src/pages/BatchDetail/BatchDetail.effects.ts
 import { useEffect } from "react";
 import { InventoryService } from "../../services/inventory.service";
-import { type Product } from "../Home/Home.vm";
+import { type ProductDetail } from "./BatchDetail.vm";
 
 interface UseBatchDetailEffectsProps {
   productId: string;
   tenantId: string;
   setLoading: (loading: boolean) => void;
-  hydrateState: (data: Product) => void;
+  hydrateState: (data: ProductDetail) => void;
 }
 
 export function useBatchDetailEffects({
@@ -188,7 +188,6 @@ export function useBatchDetailEffects({
       try {
         setLoading(true);
 
-        // El servicio ya nos devuelve el objeto listo y sanitizado
         const fetchedProduct =
           await InventoryService.fetchProductInventoryDetail(
             productId,
@@ -200,9 +199,20 @@ export function useBatchDetailEffects({
           fetchedProduct,
         );
 
+        // Verificamos que no sea null
         if (fetchedProduct && isMounted) {
-          // Ya no hace falta mapear nada aquí, el servicio lo hizo
-          hydrateState(fetchedProduct);
+          // 🎯 Mapeo explícito para cumplir con ProductDetail
+          const productDetail: ProductDetail = {
+            id: fetchedProduct.id,
+            code: fetchedProduct.code,
+            description: fetchedProduct.description,
+            alternativeDescription: fetchedProduct.alternativeDescription,
+            category: fetchedProduct.category,
+            unitsPerCrate: fetchedProduct.unitsPerCrate,
+            batches: fetchedProduct.batches || [],
+          };
+
+          hydrateState(productDetail);
         }
       } catch (error) {
         console.error(
