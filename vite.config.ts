@@ -12,7 +12,7 @@ export default defineConfig({
       },
     },
   },*/
-  base: "/",
+  base: "/chamberInventoryMP/",
   publicDir: "public",
   /*server: {
     port: 5175,
