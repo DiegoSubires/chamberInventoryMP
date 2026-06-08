@@ -10,6 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: List files for debugging
+        run: ls -R
+
       - name: Clean previous build
         run: rm -rf dist
       - name: Build

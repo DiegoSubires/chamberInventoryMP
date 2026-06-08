@@ -182,7 +182,7 @@ export default function App() {
       operatorRole="Operario"
       onLogout={handleLogout}
       onExitApp={handleLogout}
-      actions={renderHeaderActions()} // 👈 Inyectamos los botones calculados en tiempo real
+      actions={renderHeaderActions()}
     >
       <AppRouter
         userSession={session}
