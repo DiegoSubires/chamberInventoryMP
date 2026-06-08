@@ -457,9 +457,6 @@ export const InventoryService = {
    * Retorna la URL directa de descarga física del archivo
    */
   getExportUrl(tenantId: string, workingDate: string): string {
-    //return `http://localhost:4000/api/inventory/export-excel?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-    const baseUrl =
-      import.meta.env.VITE_API_URL || "https://tracesync-backend-dev.loca.lt";
-    return `${baseUrl}/api/inventory/export-excel?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+    return `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
   },
 };

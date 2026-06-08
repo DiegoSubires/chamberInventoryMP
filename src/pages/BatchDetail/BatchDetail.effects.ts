@@ -58,7 +58,7 @@ export function useBatchDetailEffects({
 }
 */
 
-// src/pages/BatchDetail/BatchDetail.effects.ts
+/*/ src/pages/BatchDetail/BatchDetail.effects.ts
 import { useEffect } from "react";
 import { ProductService } from "../../services/product.service";
 import { type ProductDetail } from "./BatchDetail.vm";
@@ -160,4 +160,59 @@ export function useBatchDetailEffects({
       isMounted = false;
     };
   }, [productId, tenantId, hydrateState, setLoading]);
+}*/
+
+// src/pages/BatchDetail/BatchDetail.effects.ts
+import { useEffect } from "react";
+import { ProductService } from "../../services/product.service";
+import { type ProductDetail } from "./BatchDetail.vm";
+
+interface UseBatchDetailEffectsProps {
+  productId: string;
+  tenantId: string;
+  setLoading: (loading: boolean) => void;
+  hydrateState: (data: ProductDetail) => void;
+}
+
+export function useBatchDetailEffects({
+  productId,
+  tenantId,
+  setLoading,
+  hydrateState,
+}: UseBatchDetailEffectsProps) {
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadData() {
+      if (!productId || !tenantId) return;
+      try {
+        setLoading(true);
+        const fetchedProduct = await ProductService.fetchProductById(
+          productId,
+          tenantId,
+        );
+
+        if (fetchedProduct && isMounted) {
+          const safeProductDetail: ProductDetail = {
+            ...fetchedProduct,
+            batches: fetchedProduct.batches || [],
+          };
+
+          hydrateState(safeProductDetail);
+        }
+      } catch (error) {
+        console.error(
+          "❌ [BatchDetail.effects] Falló la carga asíncrona tipada:",
+          error,
+        );
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [productId, tenantId, setLoading, hydrateState]);
 }

@@ -16,12 +16,15 @@ export const apiClient = async (endpoint: string, options: any = {}) => {
   /*const baseUrl =
     import.meta.env.VITE_API_URL || "https://tracesync-backend-dev.loca.lt";*/
 
-  const baseUrl = "https://tracesync-backend.onrender.com";
+  //const baseUrl = "https://tracesync-backend.onrender.com";
 
-  const response = await fetch(`${baseUrl}${cleanEndpoint}`, {
-    ...options,
-    headers,
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}${cleanEndpoint}`,
+    {
+      ...options,
+      headers,
+    },
+  );
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
