@@ -177,22 +177,42 @@ export const InventoryService = {
   },
 
   /**
-   * 1a. Carga solo un producto del catálogo, blindando cualquier respuesta inesperada del servidor (para BatchDetail)
+   * 1b. Carga solo un producto del catálogo, blindando cualquier respuesta inesperada del servidor (para BatchDetail)
    */
   async fetchProductWithInventoryCounts(
     productId: string,
     tenantId: string,
     workingDate: string,
   ): Promise<Product | null> {
-    // Si tu backend tiene un endpoint de detalle, úsalo aquí.
-    // Si NO tiene, puedes filtrar el endpoint de catálogo, PERO el backend debería soportar /products-with-counts/${productId}
     const endpoint = `/api/inventory/products-with-counts/${productId}?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
 
     try {
-      const data: RawProductWithCounts = await apiClient(endpoint);
-      return mapRawToDomain(data);
+      const data = await apiClient(endpoint);
+
+      console.log(
+        `[Service.fetchProductWithInventoryCounts] Respuesta Home (API):`,
+        data,
+      );
+
+      // ✅ BLINDAJE: Verificamos que 'data' sea un objeto real y no esté vacío/nulo.
+      // 1. !data: elimina nulos o undefined.
+      // 2. typeof data !== 'object': asegura que no sea un primitivo (número, string, bool).
+      // 3. Array.isArray(data): previene errores si el backend devuelve una lista en lugar de un objeto.
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        console.warn(
+          `[Service] Respuesta inesperada del servidor para producto ${productId}:`,
+          data,
+        );
+        return null;
+      }
+
+      // Ahora estamos seguros de pasarle un objeto válido al mapeador
+      return mapRawToDomain(data as RawProductWithCounts);
     } catch (e) {
-      console.error("Error al obtener detalle del producto:", e);
+      console.error(
+        `[Service] Error crítico al obtener detalle del producto ${productId}:`,
+        e,
+      );
       return null;
     }
   },
