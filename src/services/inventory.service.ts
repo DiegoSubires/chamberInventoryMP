@@ -195,17 +195,19 @@ export const InventoryService = {
   /**
    * 1a. Carga todo el catálogo blindando cualquier respuesta inesperada del servidor (para Home)
    */
+
   async fetchCatalogWithActiveCounts(
     tenantId: string,
     workingDate: string,
   ): Promise<Product[]> {
-    const endpoint = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-    const data: RawProductWithCounts[] = await apiClient(endpoint);
+    const url = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+    const rawData = await apiClient(url);
     console.log(
       `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
-      data,
+      rawData,
     );
-    return Array.isArray(data) ? data.map(mapRawToDomain) : [];
+    // Aplicamos el mapeo a todo el array
+    return Array.isArray(rawData) ? rawData.map(mapRawToDomain) : [];
   },
 
   /**
