@@ -246,16 +246,15 @@ export function useBatchDetailEffects({
       try {
         setLoading(true);
 
-        // Obtenemos la fecha de trabajo para pasarla al servicio
+        /*/ Obtenemos la fecha de trabajo para pasarla al servicio
         const workingDate =
-          localStorage.getItem("chamber_inventory_working_date") || "";
+          localStorage.getItem("chamber_inventory_working_date") || "";*/
 
         // Llamamos al nuevo servicio reforzado
         const fetchedProduct =
           await InventoryService.fetchProductWithInventoryCounts(
             productId,
             tenantId,
-            workingDate,
           );
 
         console.log("🔍 [Debug] Producto recibido:", fetchedProduct);
