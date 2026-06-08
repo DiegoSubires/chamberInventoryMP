@@ -29,7 +29,7 @@ export interface BackendBatchLine {
   elapsedDays: number;
 }
 
-// 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
+/*/ 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
 const mapRawToDomain = (prod: RawProductWithCounts): Product => {
   const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
 
@@ -57,7 +57,7 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
     totalCrates: Number(prod.totalCrates || 0),
     totalUnits: Number(prod.totalUnits || 0),
   };
-};
+};*/
 
 /*export const InventoryService = {
   /**
