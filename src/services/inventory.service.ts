@@ -31,18 +31,8 @@ export interface BackendBatchLine {
 
 // 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
 const mapRawToDomain = (prod: RawProductWithCounts): Product => {
-  console.log(
-    `[Service.prod.batches] Mapeando producto: ${prod.id || prod._id}, Lotes crudos:`,
-    prod.batches,
-  );
-
   const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
-  console.log(
-    `[Service.rawBatches] Mapeando producto: ${prod.id || prod._id}, Lotes crudos:`,
-    rawBatches,
-  );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const safeBatches: BatchLine[] = rawBatches.map((b: any) => ({
     id: b.id || Math.random().toString(36).substr(2, 9),
     batchCode: b.batch || b.batchCode || "",
@@ -53,7 +43,7 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
     elapsedDays: Number(b.elapsedDays ?? 0),
   }));
 
-  const mapped = {
+  return {
     id: prod.id || prod._id || "",
     code: prod.code || "S/C",
     description: prod.description || "Sin descripción",
@@ -67,12 +57,6 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
     totalCrates: Number(prod.totalCrates || 0),
     totalUnits: Number(prod.totalUnits || 0),
   };
-
-  console.log(
-    `[Service.mapped] Producto final mapeado: ${mapped.id}, Total Unidades: ${mapped.totalUnits}`,
-  );
-
-  return mapped;
 };
 
 /*export const InventoryService = {
@@ -161,39 +145,136 @@ const mapRawToDomain = (prod: RawProductWithCounts): Product => {
 
 export const InventoryService = {
   /**
-   * 1a. Carga todo el catálogo blindando cualquier respuesta inesperada del servidor (para Home)
+   * 1. Carga el catálogo blindando cualquier respuesta inesperada del servidor
    */
   async fetchCatalogWithActiveCounts(
     tenantId: string,
     workingDate: string,
   ): Promise<Product[]> {
+    if (!tenantId || !workingDate) return [];
+
+    //const url = `http://localhost:4000/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
     const endpoint = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-    const data: RawProductWithCounts[] = await apiClient(endpoint);
-    console.log(
-      `[Service.fetchCatalogWithActiveCounts] Respuesta Home (API):`,
-      data,
-    );
-    return Array.isArray(data) ? data.map(mapRawToDomain) : [];
-  },
+    //console.log(`🌐 [InventoryService] Solicitando catálogo a: ${url}`);
 
-  /**
-   * 1a. Carga solo un producto del catálogo, blindando cualquier respuesta inesperada del servidor (para BatchDetail)
-   */
-  async fetchProductWithInventoryCounts(
-    productId: string,
-    tenantId: string,
-    workingDate: string,
-  ): Promise<Product | null> {
-    // Si tu backend tiene un endpoint de detalle, úsalo aquí.
-    // Si NO tiene, puedes filtrar el endpoint de catálogo, PERO el backend debería soportar /products-with-counts/${productId}
-    const endpoint = `/api/inventory/products-with-counts/${productId}?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+    /*try {
+      const response = await fetch(url);
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("❌ [InventoryService] Error en catálogo:", errorText);
+        throw new Error(
+          `Error del servidor catálogo: ${response.status} - ${errorText}`,
+        );
+      }
+
+      const data: RawProductWithCounts[] = await response.json();
+
+      /*console.log(
+        "%c📦 [InventoryService] Datos RAW recibidos del Backend:",
+        "color: #00bcd4",
+        data,
+      );//
+
+      if (!Array.isArray(data)) {
+        console.warn(
+          "⚠️ [InventoryService] La respuesta del backend no es un array válido.",
+        );
+        return [];
+      }
+
+      return data.map((prod) => {
+        // 🛡️ BLINDAJE INTERNO DE LOTES (Garantiza que la UI reciba la estructura exacta que espera)
+        const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const safeBatches: BatchLine[] = rawBatches.map((b: any) => ({
+          id: b.id || Math.random().toString(36).substr(2, 9), // Por si requiere key única en React
+          batchCode: b.batch || b.batchCode || "",
+          totalUnits: Number(b.quantity ?? b.totalUnits ?? 0),
+          crates: Number(b.crates ?? 0),
+          looseUnits: Number(b.looseUnits ?? 0),
+          packingDate: b.packingDate || "",
+          elapsedDays: Number(b.elapsedDays ?? 0),
+        }));
+
+        // Log específico por producto si trae conteos para ver si el backend nos miente o no
+        if (prod.totalUnits || prod.totalCrates || safeBatches.length > 0) {
+          console.log(
+            `✨ [Map Servicio] Producto: ${prod.code || prod._id} | totalCrates BD: ${prod.totalCrates} | totalUnits BD: ${prod.totalUnits} | Lotes mapeados:`,
+            safeBatches,
+          );
+        }//
+
+        return {
+          id: prod.id || prod._id || "",
+          code: prod.code || "S/C",
+          description: prod.description || "Sin descripción",
+          alternativeDescription: prod.alternativeDescription || "",
+          category: prod.category || "SIN CATEGORIA",
+          subcategory: prod.subcategory || "",
+          unitsPerCrate: Number(prod.unitsPerCrate || 0),
+          visible: prod.visible !== undefined ? prod.visible : true,
+          sortOrder: Number(prod.sortOrder || 0),
+          batches: safeBatches, // <--- Asignación blindada y limpia
+          totalCrates: Number(prod.totalCrates || 0),
+          totalUnits: Number(prod.totalUnits || 0),
+        };
+      });
+    } catch (error) {
+      console.error(
+        "🚨 [InventoryService] Fallo crítico recuperando catálogo:",
+        error,
+      );
+      return []; // Fallback seguro para que la app no explote en blanco
+    }*/
     try {
-      const data: RawProductWithCounts = await apiClient(endpoint);
-      return mapRawToDomain(data);
-    } catch (e) {
-      console.error("Error al obtener detalle del producto:", e);
-      return null;
+      // Reemplazamos fetch por tu apiClient (el control res.ok ya va dentro)
+      const data: RawProductWithCounts[] = await apiClient(endpoint);
+
+      if (!Array.isArray(data)) {
+        console.warn(
+          "⚠️ [InventoryService] La respuesta del backend no es un array válido.",
+        );
+        return [];
+      }
+
+      return data.map((prod) => {
+        // 🛡️ Tu blindaje interno de lotes intacto
+        const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const safeBatches: BatchLine[] = rawBatches.map((b: any) => ({
+          id: b.id || Math.random().toString(36).substr(2, 9),
+          batchCode: b.batch || b.batchCode || "",
+          totalUnits: Number(b.quantity ?? b.totalUnits ?? 0),
+          crates: Number(b.crates ?? 0),
+          looseUnits: Number(b.looseUnits ?? 0),
+          packingDate: b.packingDate || "",
+          elapsedDays: Number(b.elapsedDays ?? 0),
+        }));
+
+        return {
+          id: prod.id || prod._id || "",
+          code: prod.code || "S/C",
+          description: prod.description || "Sin descripción",
+          alternativeDescription: prod.alternativeDescription || "",
+          category: prod.category || "SIN CATEGORIA",
+          subcategory: prod.subcategory || "",
+          unitsPerCrate: Number(prod.unitsPerCrate || 0),
+          visible: prod.visible !== undefined ? prod.visible : true,
+          sortOrder: Number(prod.sortOrder || 0),
+          batches: safeBatches,
+          totalCrates: Number(prod.totalCrates || 0),
+          totalUnits: Number(prod.totalUnits || 0),
+        };
+      });
+    } catch (error) {
+      console.error(
+        "🚨 [InventoryService] Fallo crítico recuperando catálogo:",
+        error,
+      );
+      return [];
     }
   },
 
@@ -415,12 +496,10 @@ export const InventoryService = {
   async fetchProductInventoryDetail(
     productId: string,
     tenantId: string,
-  ): Promise<Product | null> {
-    // ⚠️ ATENCIÓN AQUÍ: Asegúrate de pasar la fecha si el backend la necesita
-    const workingDate = localStorage.getItem("chamber_inventory_working_date");
-    const url = `/api/inventory/products/${productId}?tenant=${tenantId}&date=${workingDate}`;
-    const data = await apiClient(url);
-    console.log(`[Service] Respuesta Detail (API):`, data); // 🔍 LOG 4
-    return data ? mapRawToDomain(data) : null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> {
+    // Al ser un detalle de inventario, usamos la ruta de productos pero centralizada aquí
+    const endpoint = `/api/products/${productId}?tenant=${encodeURIComponent(tenantId)}`;
+    return await apiClient(endpoint);
   },
 };
