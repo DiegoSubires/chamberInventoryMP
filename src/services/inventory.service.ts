@@ -30,11 +30,16 @@ export interface BackendBatchLine {
 }
 
 // 1. Definimos el contrato (Debe coincidir con HomeSummarySchema de Zod)
-export interface HomeSummary {
+export interface HomeSummaryItem {
   productId: string;
   totalQuantity: number;
 }
 
+export interface HomeSummaryResponse {
+  tenantId: string;
+  date: string;
+  summary: HomeSummaryItem[];
+}
 /*/ 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
 const mapRawToDomain = (prod: RawProductWithCounts): Product => {
   const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
@@ -156,17 +161,16 @@ export const InventoryService = {
   async fetchInventorySummary(
     tenantId: string,
     date: string,
-  ): Promise<HomeSummary[]> {
+  ): Promise<HomeSummaryResponse> {
+    // <-- Cambiado el tipo de retorno aquí
     try {
-      // 🎯 Endpoint correcto según tu arquitectura: /api/inventory/summary
       const endpoint = `/api/inventory/summary?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(date)}`;
 
-      // Usamos tu apiClient centralizado
       const data = await apiClient(endpoint);
 
       console.log("📥 [FRONTEND] Home Summary recibido:", data);
 
-      return data as HomeSummary[];
+      return data as HomeSummaryResponse;
     } catch (error) {
       console.error("💥 [FRONTEND] Error fetching summary:", error);
       throw error;

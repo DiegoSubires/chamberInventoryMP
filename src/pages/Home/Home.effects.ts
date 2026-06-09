@@ -57,21 +57,23 @@ export const useHomeEffects = (
       setLoading(true);
       try {
         // 1. Ejecutamos ambas peticiones en paralelo para mayor velocidad
-        const [allProducts, summary] = await Promise.all([
+        const [allProducts, summaryData] = await Promise.all([
           ProductService.fetchAllProducts(tenantId),
           InventoryService.fetchInventorySummary(tenantId, workingDate),
         ]);
 
-        // 2. Creamos un diccionario (Map) para búsqueda instantánea O(1)
-        // Esto es mucho más eficiente que usar .find() en cada iteración
+        // 2. Creamos el diccionario (Map) leyendo el array anidado 'summary'
+        // Usamos un fallback con '?? []' para blindar la app si viniera vacío de la BD
         const summaryMap = new Map(
-          summary.map((s) => [s.productId, s.totalQuantity]),
+          (summaryData?.summary ?? []).map((s) => [
+            s.productId,
+            s.totalQuantity,
+          ]),
         );
 
         // 3. Fusionamos los datos y rellenamos con 0 si no existe
         const mergedData: Product[] = allProducts.map((prod) => ({
           ...prod,
-          // Si el ID del producto no está en el resumen, el resultado es 0
           totalQuantity: summaryMap.get(prod.id) ?? 0,
         }));
 
