@@ -36,6 +36,8 @@ export const ProductService = {
 
     const data = await apiClient(endpoint);
 
+    console.log("📥 [FRONTEND-PRODUCTS] Home Products recibido:", data);
+
     if (!Array.isArray(data)) {
       console.warn(
         "⚠️ [ProductService] El catálogo recibido no es un array válido.",
