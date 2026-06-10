@@ -16,7 +16,7 @@ interface RawProduct {
 }
 
 export const ProductService = {
-  async fetchAllProducts(tenantId: string): Promise<Product[]> {
+  /*async fetchAllProducts(tenantId: string): Promise<Product[]> {
     const endpoint = `/api/products?tenant=${tenantId}`;
     const data: RawProduct[] = await apiClient(endpoint);
 
@@ -30,6 +30,20 @@ export const ProductService = {
       unitsPerCrate: prod.unitsPerCrate || 0,
       batches: prod.batches || [],
     }));
+  },*/
+  async fetchAllProducts(tenantId: string): Promise<Product[]> {
+    const endpoint = `/api/products/home-catalog?tenantId=${encodeURIComponent(tenantId)}`;
+
+    const data = await apiClient(endpoint);
+
+    if (!Array.isArray(data)) {
+      console.warn(
+        "⚠️ [ProductService] El catálogo recibido no es un array válido.",
+      );
+      return [];
+    }
+
+    return data as Product[];
   },
 
   async fetchProductById(
