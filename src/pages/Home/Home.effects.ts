@@ -77,6 +77,8 @@ export const useHomeEffects = (
           totalQuantity: summaryMap.get(prod.id) ?? 0,
         }));
 
+        console.log(mergedData);
+
         if (mounted) {
           setProducts(mergedData);
         }
