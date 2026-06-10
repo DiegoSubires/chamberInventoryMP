@@ -32,7 +32,7 @@ export interface BackendBatchLine {
 // 1. Definimos el contrato (Debe coincidir con HomeSummarySchema de Zod)
 export interface HomeSummaryItem {
   productId: string;
-  totalQuantity: number;
+  quantity: number;
 }
 
 export interface HomeSummaryResponse {

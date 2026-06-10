@@ -65,16 +65,13 @@ export const useHomeEffects = (
         // 2. Creamos el diccionario (Map) leyendo el array anidado 'summary'
         // Usamos un fallback con '?? []' para blindar la app si viniera vacío de la BD
         const summaryMap = new Map(
-          (summaryData?.summary ?? []).map((s) => [
-            s.productId,
-            s.totalQuantity,
-          ]),
+          (summaryData?.summary ?? []).map((s) => [s.productId, s.quantity]),
         );
 
         // 3. Fusionamos los datos y rellenamos con 0 si no existe
         const mergedData: Product[] = allProducts.map((prod) => ({
           ...prod,
-          totalQuantity: summaryMap.get(prod.id) ?? 0,
+          quantity: summaryMap.get(prod.id) ?? 0,
         }));
 
         console.log(mergedData);
