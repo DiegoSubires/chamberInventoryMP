@@ -424,18 +424,8 @@ export const InventoryService = {
     tenantId: string,
     workingDate: string,
   ): Promise<boolean> {
-    /*try {
-      const url = `http://localhost:4000/api/inventory/day-status?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-      //const endpoint = `/api/inventory/day-status?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-      const response = await fetch(url);
-      if (!response.ok) return false;
-      const data = await response.json();
-      return !!data.finalized;
-    } catch {
-      return false;
-    }*/
     try {
-      const endpoint = `/api/inventory/day-status?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+      const endpoint = `/api/inventory/day-status?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
       const data = await apiClient(endpoint);
       return !!data.finalized;
     } catch {
