@@ -1,5 +1,5 @@
 export interface BatchLine {
-  id: string;
+  id?: string;
   batchCode: string;
   packingDate: string;
   elapsedDays: number;

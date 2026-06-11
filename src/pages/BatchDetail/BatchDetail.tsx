@@ -28,6 +28,7 @@ export default function BatchDetail({
   useBatchDetailEffects({
     productId,
     tenantId,
+    workingDate,
     setLoading,
     hydrateState: state.hydrateState,
   });

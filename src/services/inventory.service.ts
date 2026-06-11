@@ -49,17 +49,38 @@ export const InventoryService = {
 
       const data = await apiClient(endpoint);
 
-      console.log(
-        `🔍 [Inventory.service] - Resultado de la consulta:`,
-        JSON.stringify(data, null, 2),
-      );
-
       return (data.summary || data) as Product[];
     } catch (error) {
       console.error("💥 Error al obtener el resumen consolidado:", error);
       throw error;
     }
   },
+
+  /**
+   * Obtiene el detalle de un producto específico, incluyendo sus líneas de lote (recuento)
+   * para una fecha y tenant determinados.
+   */
+  async fetchProductWithActiveCountsById(
+    tenantId: string,
+    productId: string,
+    workingDate: string,
+  ): Promise<Product> {
+    // Usamos el endpoint que construimos en tu router (sin la doble barra '//')
+    const endpoint = `/api/inventory/product-id?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}&id=${encodeURIComponent(productId)}`;
+
+    try {
+      const response = await apiClient(endpoint);
+
+      return response.product as Product;
+    } catch (error) {
+      console.error(
+        `🚨 [InventoryService] Error al obtener detalle del producto ${productId}:`,
+        error,
+      );
+      throw error;
+    }
+  },
+
   /**
    * 1. Carga el catálogo blindando cualquier respuesta inesperada del servidor
    */

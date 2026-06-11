@@ -6,6 +6,7 @@ import { type Product } from "../../types/product.types";
 interface UseBatchDetailEffectsProps {
   productId: string;
   tenantId: string;
+  workingDate: string;
   setLoading: (loading: boolean) => void;
   hydrateState: (data: Product) => void;
 }
@@ -13,6 +14,7 @@ interface UseBatchDetailEffectsProps {
 export function useBatchDetailEffects({
   productId,
   tenantId,
+  workingDate,
   setLoading,
   hydrateState,
 }: UseBatchDetailEffectsProps) {
@@ -20,43 +22,34 @@ export function useBatchDetailEffects({
     let isMounted = true;
 
     async function loadData() {
-      if (!productId || !tenantId) return;
+      // Validamos que tengamos los tres parámetros necesarios
+      if (!productId || !tenantId || !workingDate) return;
+
       try {
         setLoading(true);
 
+        // 🚀 USAMOS LA NUEVA FUNCIÓN DEL SERVICIO
         const fetchedProduct =
-          await InventoryService.fetchProductInventoryDetail(
-            productId,
+          await InventoryService.fetchProductWithActiveCountsById(
             tenantId,
+            productId,
+            workingDate,
           );
 
-        // 🛡️ AÑADIR ESTE LOG PARA DEPURAR
         console.log("🔍 [Debug] Producto recibido:", fetchedProduct);
 
-        // 🛡️ BLINDAJE: Verificamos que el objeto exista
         if (!fetchedProduct) {
           console.error(
             "❌ El servicio devolvió null para el producto:",
             productId,
           );
-          return; // Salimos si no hay datos
+          return;
         }
 
         if (isMounted) {
-          // 🎯 Mapeo seguro
-          const productDetail: Product = {
-            id: fetchedProduct.id || "",
-            code: fetchedProduct.code || "S/C",
-            description: fetchedProduct.description || "Sin descripción",
-            alternativeDescription: fetchedProduct.alternativeDescription || "",
-            category: fetchedProduct.category || "SIN CATEGORIA",
-            unitsPerCrate: fetchedProduct.unitsPerCrate || 0,
-            batches: Array.isArray(fetchedProduct.batches)
-              ? fetchedProduct.batches
-              : [],
-          };
-
-          hydrateState(productDetail);
+          // El objeto 'fetchedProduct' ya debe venir con la estructura
+          // correcta (alternativeDescription, id, batchLines)
+          hydrateState(fetchedProduct as Product);
         }
       } catch (error) {
         console.error(
@@ -72,5 +65,5 @@ export function useBatchDetailEffects({
     return () => {
       isMounted = false;
     };
-  }, [productId, tenantId, setLoading, hydrateState]);
+  }, [productId, tenantId, workingDate, setLoading, hydrateState]);
 }
