@@ -1,4 +1,4 @@
-import { type BatchLine } from "../../components/BatchRow/BatchRow.vm";
+import { type BatchLine } from "../../types/product.types";
 
 export interface BatchDetailProps {
   productId: string;
