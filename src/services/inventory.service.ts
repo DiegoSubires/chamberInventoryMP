@@ -49,6 +49,11 @@ export const InventoryService = {
 
       const data = await apiClient(endpoint);
 
+      console.log(
+        `🔍 [Inventory.service] - Resultado de la consulta:`,
+        JSON.stringify(data, null, 2),
+      );
+
       return (data.summary || data) as Product[];
     } catch (error) {
       console.error("💥 Error al obtener el resumen consolidado:", error);

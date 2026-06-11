@@ -28,6 +28,10 @@ export const useHomeEffects = (
 
         if (mounted) {
           setProducts(consolidatedProducts);
+          console.log(
+            `🔍 [Home.effect]:`,
+            JSON.stringify(consolidatedProducts, null, 2),
+          );
         }
       } catch (err) {
         console.error("❌ [Home.effects] Error al cargar inventario:", err);
