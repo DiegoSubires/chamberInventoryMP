@@ -77,4 +77,4 @@ export function mapApiToProductDetail(
       typeof found.unitsPerCrate === "number" ? found.unitsPerCrate : 1,
     batches: mappedBatches,
   };
-}
+}*/
