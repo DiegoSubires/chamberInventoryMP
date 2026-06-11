@@ -38,7 +38,7 @@ export const BatchRow: React.FC<BatchRowProps> = ({
         <button
           type="button"
           className={styles.deleteIconButton}
-          onClick={() => onRemove(linea.id)}
+          onClick={() => onRemove(linea.id ?? "")}
           title="Eliminar este lote"
         >
           🗑️

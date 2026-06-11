@@ -14,7 +14,7 @@ export const BatchRowFields: React.FC<BatchRowFieldsProps> = ({
       {/* Lote (DDMM/OO) */}
       <BatchCodeInput
         value={linea.batchCode}
-        onChange={(val) => onChangeField(linea.id, "batchCode", val)}
+        onChange={(val) => onChangeField(linea.id ?? "", "batchCode", val)}
       />
 
       {/* F. Envasado (con calendario nativo) */}
@@ -25,7 +25,7 @@ export const BatchRowFields: React.FC<BatchRowFieldsProps> = ({
           className={styles.darkInput}
           value={linea.packingDate || ""}
           onChange={(e) =>
-            onChangeField(linea.id, "packingDate", e.target.value)
+            onChangeField(linea.id ?? "", "packingDate", e.target.value)
           }
         />
       </div>
@@ -51,7 +51,9 @@ export const BatchRowFields: React.FC<BatchRowFieldsProps> = ({
           className={styles.darkInput}
           placeholder="0"
           value={linea.crates || ""}
-          onChange={(e) => onChangeField(linea.id, "crates", e.target.value)}
+          onChange={(e) =>
+            onChangeField(linea.id ?? "", "crates", e.target.value)
+          }
         />
       </div>
 
@@ -64,7 +66,7 @@ export const BatchRowFields: React.FC<BatchRowFieldsProps> = ({
           placeholder="0"
           value={linea.looseUnits || ""}
           onChange={(e) =>
-            onChangeField(linea.id, "looseUnits", e.target.value)
+            onChangeField(linea.id ?? "", "looseUnits", e.target.value)
           }
         />
       </div>
