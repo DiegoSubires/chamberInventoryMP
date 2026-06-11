@@ -13,28 +13,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isLandscape,
   onNavigate,
 }) => {
-  /*const bjsTotales = product.totalCrates || 0;
-  const undsTotales = product.totalUnits || 0;
-  const uPorCaja = product.unitsPerCrate || 0;*/
-  //const totalCalculado = undsTotales + bjsTotales * uPorCaja;
-  const totalCalculado =
-    product.batches?.reduce((acc, b) => acc + (b.totalUnits || 0), 0) || 0;
-  /*const totalDesdeArrayBatches =
-    product.batches?.reduce((acc, b) => acc + (b.totalUnits || 0), 0) || 0;
-
-  console.log(
-    `🃏 [ProductCard RENDER] -> [${product.code}] - ${product.description}`,
-  );
-  console.log(
-    `   └─> totalUnits (BD): ${undsTotales} | totalCrates (BD): ${bjsTotales} | unitsPerCrate: ${uPorCaja}`,
-  );
-  console.log(
-    `   └─> 🛑 Operación Matemática Final: ${undsTotales} + (${bjsTotales} * ${uPorCaja}) = ${totalCalculado} unds`,
-  );
-  console.log(
-    `   └─> 💡 Plan B (Suma de array batches local): ${totalDesdeArrayBatches} unds (Tiene ${product.batches?.length || 0} lotes asignados)`,
-  );*/
-
   return (
     <div
       className={`${styles.card} ${isLandscape ? styles.landscapeCard : ""}`}
@@ -50,7 +28,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         <div className={styles.totalBadge}>
-          <strong>{totalCalculado} unds</strong>
+          <strong>{product.totalQuantity} unds</strong>
         </div>
       </div>
     </div>
