@@ -1,31 +1,3 @@
-/*import { useMemo, useState } from "react";
-import { initialHomeState, type HomeState } from "./Home.vm";
-
-export const useHomeViewModel = (
-  state: HomeState,
-  setState: React.Dispatch<React.SetStateAction<HomeState>>,
-) => {
-  const filteredProducts = useMemo(() => {
-    return state.activeCategory === "TODOS"
-      ? state.products
-      : state.products.filter((p) => p.category === state.activeCategory);
-  }, [state.products, state.activeCategory]);
-
-  const setActiveCategory = (category: string) => {
-    setState((prev) => ({ ...prev, activeCategory: category }));
-  };
-
-  return {
-    filteredProducts,
-    setActiveCategory,
-    loading: state.loading,
-  };
-};
-
-export const useHomeState = () => {
-  return useState<HomeState>(initialHomeState);
-};*/
-
 // src/pages/Home/Home.state.ts
 import { useMemo, useState } from "react";
 import { initialHomeState, type HomeState } from "./Home.vm";

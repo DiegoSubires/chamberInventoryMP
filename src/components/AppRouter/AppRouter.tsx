@@ -27,48 +27,6 @@ export function AppRouter({
   onRegisterFinalizeAction,
   onRegisterSaveAction,
 }: AppRouterProps) {
-  /*const [currentScreen, setCurrentScreen] = useState<ScreenView>("CATALOG");
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    null,
-  );
-
-  const handleNavigate = (
-    screen: ScreenView,
-    productId: string | null = null,
-  ) => {
-    setSelectedProductId(productId);
-    setCurrentScreen(screen);
-  };*/
-
-  /*const renderScreen = () => {
-    switch (currentScreen) {
-      case "CATALOG":
-        return (
-          <Home
-            userSession={userSession}
-            onNavigate={onNavigate}
-            onRegisterFinalizeAction={onRegisterFinalizeAction}
-          />
-        );
-
-      case "BATCH_DETAIL":
-        if (!selectedProductId) return <div>No product selected.</div>;
-        return (
-          <BatchDetail
-            productId={selectedProductId}
-            tenantId={userSession.tenantId}
-            onBack={() => onNavigate("CATALOG", null)}
-            onRegisterSaveAction={onRegisterSaveAction}
-          />
-        );
-
-      default:
-        return <div>Ruta no encontrada en la planta.</div>;
-    }
-  };
-
-  return <div className={styles.routerWrapper}>{renderScreen()}</div>;*/
-
   return (
     <div className={styles.routerWrapper}>
       {currentScreen === "CATALOG" ? (

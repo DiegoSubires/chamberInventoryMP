@@ -1,7 +1,7 @@
-import { type ProductDetail } from "./BatchDetail.vm";
-import { type BatchLine } from "../../components/BatchRow/BatchRow.vm";
+//import { type ProductDetail } from "./BatchDetail.vm";
+//import { type BatchLine } from "../../components/BatchRow/BatchRow.vm";
 
-interface ApiBatch {
+/*interface ApiBatch {
   id?: unknown;
   batchCode?: unknown;
   packingDate?: unknown;

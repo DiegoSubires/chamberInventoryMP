@@ -1,6 +1,5 @@
 // src/services/product.service.ts
-import { type Product } from "../pages/Home/Home.vm";
-import { type BatchLine } from "../components/BatchRow/BatchRow.vm";
+import { type BatchLine, type Product } from "../types/product.types";
 import { apiClient } from "./apiClient";
 
 interface RawProduct {
@@ -16,21 +15,6 @@ interface RawProduct {
 }
 
 export const ProductService = {
-  /*async fetchAllProducts(tenantId: string): Promise<Product[]> {
-    const endpoint = `/api/products?tenant=${tenantId}`;
-    const data: RawProduct[] = await apiClient(endpoint);
-
-    return data.map((prod) => ({
-      id: prod.id || prod._id || "",
-      code: prod.code || "S/C",
-      description: prod.description || "Sin descripción",
-      alternativeDescription: prod.alternativeDescription || "",
-      category: prod.category || "SIN CATEGORIA",
-      subcategory: prod.subcategory || "",
-      unitsPerCrate: prod.unitsPerCrate || 0,
-      batches: prod.batches || [],
-    }));
-  },*/
   async fetchAllProducts(tenantId: string): Promise<Product[]> {
     const endpoint = `/api/products/home-catalog?tenantId=${encodeURIComponent(tenantId)}`;
 

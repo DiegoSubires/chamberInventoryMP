@@ -1,4 +1,4 @@
-import { type BatchLine } from "../../components/BatchRow/BatchRow.vm";
+import { type BatchLine } from "../../types/product.types";
 
 /**
  * Calcula de forma segura el total físico de unidades basándose en el factor de la caja

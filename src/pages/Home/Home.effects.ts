@@ -2,16 +2,15 @@
 import { useEffect } from "react";
 import { InventoryService } from "../../services/inventory.service";
 //import { ProductService } from "../../services/product.service";
-import { type HomeProduct } from "./Home.vm";
+import { type Product } from "../../types/product.types";
 
 export const useHomeEffects = (
   tenantId: string,
   workingDate: string,
   setLoading: (l: boolean) => void,
-  setProducts: (p: HomeProduct[]) => void,
+  setProducts: (p: Product[]) => void,
 ) => {
   useEffect(() => {
-    // 🛡️ Guardián de ejecución: Si falta el tenant o la fecha de trabajo, no disparamos la red
     if (!tenantId || !workingDate) {
       /*console.log(
         "⏳ [Home.effects] Esperando parámetros maestros (tenantId o workingDate)...",
@@ -56,8 +55,5 @@ export const useHomeEffects = (
         handleRefreshSignal,
       );
     };
-
-    // ✅ IMPORTANTE: Añadimos workingDate aquí.
-    // Si el usuario cambia de día en la pantalla, este array reactiva el flujo entero de red.
   }, [tenantId, workingDate, setLoading, setProducts]);
 };

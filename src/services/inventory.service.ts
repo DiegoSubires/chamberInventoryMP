@@ -1,8 +1,6 @@
 // src/services/inventory.service.ts
-import { type Product } from "../pages/Home/Home.vm";
-import { type BatchLine } from "../components/BatchRow/BatchRow.vm";
 import { apiClient } from "./apiClient";
-import { type HomeProduct } from "../pages/Home/Home.vm";
+import { type BatchLine, type Product } from "../types/product.types";
 
 interface RawProductWithCounts {
   _id?: string;
@@ -35,7 +33,7 @@ export interface BackendBatchLine {
 export interface HomeSummaryResponse {
   tenantId: string;
   date: string;
-  summary: HomeProduct[];
+  summary: Product[];
 }
 
 export const InventoryService = {
@@ -45,13 +43,13 @@ export const InventoryService = {
   async fetchInventorySummary(
     tenantId: string,
     date: string,
-  ): Promise<HomeProduct[]> {
+  ): Promise<Product[]> {
     try {
       const endpoint = `/api/inventory/summary?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(date)}`;
 
       const data = await apiClient(endpoint);
 
-      return (data.summary || data) as HomeProduct[];
+      return (data.summary || data) as Product[];
     } catch (error) {
       console.error("💥 Error al obtener el resumen consolidado:", error);
       throw error;

@@ -1,14 +1,6 @@
 // src/components/BatchRow/BatchRow.vm.ts
 
-export interface BatchLine {
-  id: string;
-  batchCode: string;
-  packingDate: string;
-  elapsedDays: number;
-  crates: number;
-  looseUnits: number;
-  totalUnits: number;
-}
+import { type BatchLine } from "../../types/product.types";
 
 export interface BatchRowProps {
   linea: BatchLine;

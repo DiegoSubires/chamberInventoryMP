@@ -8,7 +8,7 @@ import { useHomeEffects } from "./Home.effects";
 import { type ScreenView } from "../../components/AppRouter/AppRouter";
 import { InventoryService } from "../../services/inventory.service";
 import styles from "./Home.module.scss";
-import { type Product } from "./Home.vm";
+import { type Product } from "../../types/product.types";
 
 interface HomeProps {
   userSession: {

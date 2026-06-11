@@ -1,25 +1,4 @@
-import { type BatchLine } from "../../components/BatchRow";
-
-export interface Product {
-  id: string;
-  code: string;
-  description: string;
-  alternativeDescription: string;
-  category: string;
-  subcategory?: string;
-  unitsPerCrate: number;
-  totalCrates?: number;
-  batches?: BatchLine[];
-  sortOrder?: number;
-  totalUnits?: number;
-  visible?: boolean;
-}
-
-export interface HomeProduct {
-  id: string;
-  alternativeDescription: string;
-  totalQuantity: number;
-}
+import { type Product } from "../../types/product.types";
 
 export interface HomeState {
   activeCategory: string;

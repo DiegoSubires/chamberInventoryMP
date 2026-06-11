@@ -4,7 +4,7 @@ import { BatchRow } from "../../components/BatchRow/BatchRow";
 import { useBatchDetailState } from "./BatchDetail.state";
 import { useBatchDetailEffects } from "./BatchDetail.effects";
 import { InventoryService } from "../../services";
-import { type BatchLine } from "../../components/BatchRow/BatchRow.vm";
+import { type BatchLine } from "../../types/product.types";
 import { type BatchDetailProps, Empty_Line } from "./BatchDetail.vm";
 import styles from "./BatchDetail.module.scss";
 
@@ -62,116 +62,6 @@ export default function BatchDetail({
     onRegisterSaveAction(handleSaveProductBatches);
   }, [handleSaveProductBatches, onRegisterSaveAction]);
 
-  /*/ Interceptor de navegación hacia atrás: Realiza el Push del borrador hacia MongoDB
-  const handleOnBack = async () => {
-    console.log(
-      "🔍 [LOG 1 - COMPONENTE] Estado original crudo en React (state.batchLines):",
-      state.batchLines,
-    );
-    try {
-      setIsSaving(true);
-
-      // 🎯 Filtramos filas vacías, pero mantenemos el tipo BatchLine[] intacto
-      const cleanBatchesForService = state.batchLines.filter(
-        (line) => line.batchCode.trim() !== "",
-      );
-
-      console.log(
-        "🔍 [LOG 2 - COMPONENTE] Enviando lotes limpios directamente al Servicio:",
-        cleanBatchesForService,
-      );
-
-      // 🚀 Enviamos el array sin deformar, cumpliendo estrictamente con BatchLine[]
-      await InventoryService.saveProductBatches(
-        tenantId,
-        productId,
-        workingDate,
-        cleanBatchesForService, // ✨ Resuelve el error TypeScript (2345)
-      );
-
-      console.log(
-        "✅ [BatchDetail.tsx] Guardado completado con éxito. Navegando al catálogo.",
-      );
-      onBack();
-    } catch (error) {
-      console.error(
-        "❌ [BatchDetail.tsx] Error salvando el borrador temporal:",
-        error,
-      );
-      alert(
-        "No se pudo guardar el recuento de lotes. Revisa la conexión con el servidor.",
-      );
-    } finally {
-      setIsSaving(false);
-    }
-  };*/
-  // En src/pages/BatchDetail/BatchDetail.tsx
-
-  /*const handleOnBack = async () => {
-    /*console.log(
-      "%c=== 🛑 INICIO PROCESO SALIDA BATCH_DETAIL ===",
-      "background: #222; color: #bada55",
-    );
-    console.log(
-      `🔍 [BatchDetail] productId: ${productId} | isDirty: ${state.isDirty}`,
-    );
-    console.log(
-      "🔍 [BatchDetail] Líneas actuales en el estado de React:",
-      state.batchLines,
-    );
-    console.log(
-      `🔍 [BatchDetail] Gran Total calculado en UI: ${state.grandTotalUnits} unds`,
-    );/
-
-    // ⚡ Solo ejecutamos la persistencia si el operario "retocó" algún dato
-    if (state.isDirty) {
-      setIsSaving(true);
-      try {
-        /*console.log(
-          "🚀 [BatchDetail] Enviando líneas al servicio saveProductBatches...",
-        );*/
-  /*/ Mapeamos las líneas del estado de React al formato del contrato del backend
-        const mappedBatches = state.batchLines.map((line) => ({
-          batch: line.batchCode,
-          quantity: Number(line.totalUnits) || 0,
-          crates: Number(line.crates) || 0,
-          looseUnits: Number(line.looseUnits) || 0,
-          packingDate: line.packingDate,
-          elapsedDays: Number(line.elapsedDays) || 0,
-        }));/
-
-        // Guardamos y ESPERAMOS a que la promesa se resuelva en el backend
-        await InventoryService.saveProductBatches(
-          tenantId,
-          productId,
-          workingDate,
-          state.batchLines, // Enviamos el estado completo, el servicio se encargará de filtrar internamente
-        );
-
-        // Emitimos la señal de refresco global para que Home se entere de inmediato
-        console.log(
-          "⚡ [BatchDetail] Guardado exitoso. Despachando evento global 'refresh-chamber-inventory'...",
-        );/
-        window.dispatchEvent(new Event("refresh-chamber-inventory"));
-      } catch (error) {
-        console.error("❌ Error persistiendo cambios del lote:", error);
-      } finally {
-        setIsSaving(false);
-      }
-    } else {
-      /*console.log(
-        "ℹ️ [BatchDetail] Salida sin cambios (isDirty === false). Omitiendo guardado redundante.",
-      );/
-    }
-
-    // Ejecutamos la navegación hacia atrás de forma segura
-    console.log(
-      "%c=== 🏁 FIN PROCESO SALIDA -> NAVEGANDO A HOME ===",
-      "background: #222; color: #ff0055",
-    );/
-    onBack();
-  };}*/
-
   // 🛡️ CONTROL DE SEGURIDAD 1: Si está cargando por primera vez, mostramos el spinner
   if (loading && !state.product) {
     return (
@@ -223,7 +113,7 @@ export default function BatchDetail({
                     id,
                     field,
                     value,
-                    state.product!.unitsPerCrate,
+                    state.product!.unitsPerCrate ?? 0,
                   )
                 }
                 onRemove={(id: string) => state.removeBatchRow(id)}

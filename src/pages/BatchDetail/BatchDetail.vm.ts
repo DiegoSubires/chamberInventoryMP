@@ -1,15 +1,5 @@
 import { type BatchLine } from "../../components/BatchRow/BatchRow.vm";
 
-export interface ProductDetail {
-  id: string;
-  code: string;
-  description: string;
-  alternativeDescription: string;
-  category: string;
-  unitsPerCrate: number;
-  batches: BatchLine[];
-}
-
 export interface BatchDetailProps {
   productId: string;
   tenantId: string;
