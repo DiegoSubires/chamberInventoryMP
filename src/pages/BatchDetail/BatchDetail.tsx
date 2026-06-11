@@ -20,6 +20,10 @@ export default function BatchDetail({
   // Inicializamos el hook de estado
   const state = useBatchDetailState(null);
 
+  useEffect(() => {
+    console.log("🔍 [3. Estado actual en el componente]:", state);
+  }, [state]);
+
   const workingDate =
     localStorage.getItem("chamber_inventory_working_date") ||
     new Date().toISOString().split("T")[0];

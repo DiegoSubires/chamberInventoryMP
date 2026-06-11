@@ -47,9 +47,18 @@ export function useBatchDetailEffects({
         }
 
         if (isMounted) {
-          // El objeto 'fetchedProduct' ya debe venir con la estructura
-          // correcta (alternativeDescription, id, batchLines)
-          hydrateState(fetchedProduct as Product);
+          const productToHydrate = {
+            ...fetchedProduct,
+            // Asegúrate de mapear las propiedades si el nombre difiere
+            // Ejemplo: Si el estado espera 'batches' y recibes 'batchLines', debes renombrar:
+            batches: fetchedProduct.batches || [],
+          };
+
+          console.log(
+            "🔍 [2. Datos pasando a hydrateState]:",
+            productToHydrate,
+          );
+          hydrateState(productToHydrate as Product);
         }
       } catch (error) {
         console.error(
