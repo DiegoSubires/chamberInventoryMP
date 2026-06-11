@@ -2,6 +2,7 @@
 import { type Product } from "../pages/Home/Home.vm";
 import { type BatchLine } from "../components/BatchRow/BatchRow.vm";
 import { apiClient } from "./apiClient";
+import { type HomeProduct } from "../pages/Home/Home.vm";
 
 interface RawProductWithCounts {
   _id?: string;
@@ -30,129 +31,12 @@ export interface BackendBatchLine {
 }
 
 // 1. Definimos el contrato (Debe coincidir con HomeSummarySchema de Zod)
-export interface HomeSummaryItem {
-  productId: string;
-  quantity: number;
-}
 
 export interface HomeSummaryResponse {
   tenantId: string;
   date: string;
-  summary: HomeSummaryItem[];
+  summary: HomeProduct[];
 }
-/*/ 1. EXTRAEMOS LA LÓGICA DE MAPEADO (El "Blindaje" frente a cambios en los productos o datos corruptos )
-const mapRawToDomain = (prod: RawProductWithCounts): Product => {
-  const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
-
-  const safeBatches: BatchLine[] = rawBatches.map((b: any) => ({
-    id: b.id || Math.random().toString(36).substr(2, 9),
-    batchCode: b.batch || b.batchCode || "",
-    totalUnits: Number(b.quantity ?? b.totalUnits ?? 0),
-    crates: Number(b.crates ?? 0),
-    looseUnits: Number(b.looseUnits ?? 0),
-    packingDate: b.packingDate || "",
-    elapsedDays: Number(b.elapsedDays ?? 0),
-  }));
-
-  return {
-    id: prod.id || prod._id || "",
-    code: prod.code || "S/C",
-    description: prod.description || "Sin descripción",
-    alternativeDescription: prod.alternativeDescription || "",
-    category: prod.category || "SIN CATEGORIA",
-    subcategory: prod.subcategory || "",
-    unitsPerCrate: Number(prod.unitsPerCrate || 0),
-    visible: prod.visible !== undefined ? prod.visible : true,
-    sortOrder: Number(prod.sortOrder || 0),
-    batches: safeBatches,
-    totalCrates: Number(prod.totalCrates || 0),
-    totalUnits: Number(prod.totalUnits || 0),
-  };
-};*/
-
-/*export const InventoryService = {
-  /**
-   * 1. Carga el catálogo cruzado usando la ruta oficial del enrutador /api/inventory
-   /
-  async fetchCatalogWithActiveCounts(
-    tenantId: string,
-    workingDate: string,
-  ): Promise<Product[]> {
-    if (!tenantId || !workingDate) return [];
-
-    // 🎯 URL Corregida: añadimos /inventory para que coincida con el router index del backend
-    const url = `http://localhost:4000/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-
-    console.log(`🌐 [InventoryService] Solicitando catálogo a: ${url}`);
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("❌ [InventoryService] Error en catálogo:", errorText);
-      throw new Error(
-        `Error del servidor catálogo: ${response.status} - ${errorText}`,
-      );
-    }
-
-    const data: RawProductWithCounts[] = await response.json();
-
-    return data.map((prod) => ({
-      id: prod.id || prod._id || "",
-      code: prod.code || "S/C",
-      description: prod.description || "Sin descripción",
-      alternativeDescription: prod.alternativeDescription || "",
-      category: prod.category || "SIN CATEGORIA",
-      subcategory: prod.subcategory || "",
-      unitsPerCrate: prod.unitsPerCrate || 0,
-      visible: prod.visible !== undefined ? prod.visible : true,
-      sortOrder: prod.sortOrder || 0,
-      batches: prod.batches || [],
-      totalCrates: prod.totalCrates || 0,
-      totalUnits: prod.totalUnits || 0,
-    }));
-  },
-
-  /**
-   * 2. Guarda el borrador temporal usando el método PUT permitido en app.js
-   /
-  async saveProductBatches(
-    tenantId: string,
-    productId: string,
-    workingDate: string,
-    batches: BatchLine[], // Recibe las líneas del estado de React
-  ): Promise<void> {
-    const url = `http://localhost:4000/api/inventory/temporary`;
-
-    // 🟢 MAPEO DE SEGURIDAD: Transformamos el estado de React al contrato del Backend
-    const formattedLines: BackendBatchLine[] = batches.map((b) => ({
-      batch: b.batchCode || "", // Convertimos batchCode a batch
-      quantity: b.totalUnits || 0,
-      crates: b.crates || 0,
-      looseUnits: b.looseUnits || 0,
-      packingDate: b.packingDate,
-      elapsedDays: b.elapsedDays || 0,
-    }));
-
-    const payloadString = JSON.stringify({
-      tenantId,
-      productId,
-      countDate: workingDate,
-      batchLines: formattedLines,
-    });
-
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: payloadString,
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error en persistencia temporal: ${errorText}`);
-    }
-  },
-};*/
 
 export const InventoryService = {
   /**
@@ -161,22 +45,18 @@ export const InventoryService = {
   async fetchInventorySummary(
     tenantId: string,
     date: string,
-  ): Promise<HomeSummaryResponse> {
-    // <-- Cambiado el tipo de retorno aquí
+  ): Promise<HomeProduct[]> {
     try {
       const endpoint = `/api/inventory/summary?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(date)}`;
 
       const data = await apiClient(endpoint);
 
-      console.log("📥 [FRONTEND] Home Summary recibido:", data);
-
-      return data as HomeSummaryResponse;
+      return (data.summary || data) as HomeProduct[];
     } catch (error) {
-      console.error("💥 [FRONTEND] Error fetching summary:", error);
+      console.error("💥 Error al obtener el resumen consolidado:", error);
       throw error;
     }
   },
-
   /**
    * 1. Carga el catálogo blindando cualquier respuesta inesperada del servidor
    */

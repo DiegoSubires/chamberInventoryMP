@@ -15,6 +15,12 @@ export interface Product {
   visible?: boolean;
 }
 
+export interface HomeProduct {
+  id: string;
+  alternativeDescription: string;
+  totalQuantity: number;
+}
+
 export interface HomeState {
   activeCategory: string;
   activeSubcategory: string;
