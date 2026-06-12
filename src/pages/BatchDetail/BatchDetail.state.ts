@@ -38,7 +38,7 @@ export function useBatchDetailState(initialProduct: Product | null) {
       elapsedDays: 0,
       crates: 0,
       looseUnits: 0,
-      totalUnits: 0,
+      quantity: 0,
     };
     setBatchLines((prev) => [...prev, newLine]);
   };
@@ -50,7 +50,7 @@ export function useBatchDetailState(initialProduct: Product | null) {
 
   // ✨ Calculamos el sumatorio total de bandejas acumuladas dinámicamente
   const grandTotalUnits = useMemo(() => {
-    return batchLines.reduce((acc, line) => acc + (line.totalUnits || 0), 0);
+    return batchLines.reduce((acc, line) => acc + (line.quantity || 0), 0);
   }, [batchLines]);
 
   const isDirty = useMemo(() => {

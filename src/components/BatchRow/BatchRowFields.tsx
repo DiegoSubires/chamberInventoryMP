@@ -75,7 +75,7 @@ export const BatchRowFields: React.FC<BatchRowFieldsProps> = ({
       <div className={styles.horizontalInputGroup}>
         <label className={styles.shortLabel}>Total Lote</label>
         <div className={styles.totalCalculadoBadge}>
-          {linea.totalUnits || 0} unds
+          {linea.quantity || 0} unds
         </div>
       </div>
     </div>

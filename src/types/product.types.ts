@@ -5,7 +5,7 @@ export interface BatchLine {
   elapsedDays: number;
   crates: number;
   looseUnits: number;
-  totalUnits: number;
+  quantity: number;
 }
 
 export interface Product {
@@ -21,5 +21,6 @@ export interface Product {
   sortOrder?: number;
   totalUnits?: number;
   visible?: boolean;
+  quantity?: number;
   totalQuantity?: number;
 }

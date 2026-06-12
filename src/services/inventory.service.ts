@@ -157,7 +157,7 @@ export const InventoryService = {
     // 🛡️ SEGUNDA BARRERA: Forzar conversión numérica explícita antes de enviar el JSON
     const formattedLines: BatchLine[] = (batchLine || []).map((b) => ({
       batchCode: String(b.batchCode || ""),
-      totalUnits: Number(b.totalUnits || 0),
+      quantity: Number(b.quantity || 0),
       crates: Number(b.crates || 0),
       looseUnits: Number(b.looseUnits || 0),
       packingDate: b.packingDate,

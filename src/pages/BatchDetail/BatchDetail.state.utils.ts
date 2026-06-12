@@ -33,7 +33,7 @@ export const updateBatchLineInList = (
     }
 
     if (field === "crates" || field === "looseUnits") {
-      updatedLine.totalUnits = calculateLineTotal(
+      updatedLine.quantity = calculateLineTotal(
         Number(updatedLine.crates),
         Number(updatedLine.looseUnits),
         unitsPerCrate,
@@ -41,7 +41,7 @@ export const updateBatchLineInList = (
     }
 
     // 3. Recalculamos el total (manteniendo tu lógica actual)
-    updatedLine.totalUnits =
+    updatedLine.quantity =
       Number(updatedLine.crates) * unitsPerCrate +
       Number(updatedLine.looseUnits);
 
