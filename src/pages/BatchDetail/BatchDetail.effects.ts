@@ -51,7 +51,7 @@ export function useBatchDetailEffects({
             ...fetchedProduct,
             // Asegúrate de mapear las propiedades si el nombre difiere
             // Ejemplo: Si el estado espera 'batches' y recibes 'batchLines', debes renombrar:
-            batches: fetchedProduct.batches || [],
+            batches: fetchedProduct.batchLines || [],
           };
 
           console.log(

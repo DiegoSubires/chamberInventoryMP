@@ -6,7 +6,7 @@ import { updateBatchLineInList } from "./BatchDetail.state.utils";
 export function useBatchDetailState(initialProduct: Product | null) {
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [batchLines, setBatchLines] = useState<BatchLine[]>(
-    initialProduct?.batches ?? [],
+    initialProduct?.batchLines ?? [],
   );
 
   const [initialLines, setInitialLines] = useState<BatchLine[]>([]);
@@ -14,8 +14,8 @@ export function useBatchDetailState(initialProduct: Product | null) {
   // Hidratar el estado cuando los efectos terminen la carga asíncrona
   const hydrateState = useCallback((data: Product) => {
     setProduct(data);
-    setBatchLines(data.batches || []);
-    setInitialLines(JSON.parse(JSON.stringify(data.batches || [])));
+    setBatchLines(data.batchLines || []);
+    setInitialLines(JSON.parse(JSON.stringify(data.batchLines || [])));
   }, []);
 
   const updateField = (

@@ -2,7 +2,7 @@
 import { apiClient } from "./apiClient";
 import { type BatchLine, type Product } from "../types/product.types";
 
-interface RawProductWithCounts {
+/*interface RawProductWithCounts {
   _id?: string;
   id?: string;
   code?: string;
@@ -26,7 +26,7 @@ export interface BackendBatchLine {
   looseUnits: number;
   packingDate?: string;
   elapsedDays: number;
-}
+}*/
 
 // 1. Definimos el contrato (Debe coincidir con HomeSummarySchema de Zod)
 
@@ -83,7 +83,7 @@ export const InventoryService = {
 
   /**
    * 1. Carga el catálogo blindando cualquier respuesta inesperada del servidor
-   */
+   //
   async fetchCatalogWithActiveCounts(
     tenantId: string,
     workingDate: string,
@@ -140,7 +140,7 @@ export const InventoryService = {
       );
       return [];
     }
-  },
+  },*/
 
   /**
    * 2. Guarda el borrador parseando datos a tipos primitivos nativos
@@ -149,15 +149,15 @@ export const InventoryService = {
     tenantId: string,
     productId: string,
     workingDate: string,
-    batches: BatchLine[],
+    batchLine: BatchLine[],
   ): Promise<void> {
     //const url = `http://localhost:4000/api/inventory/temporary`;
     const endpoint = `/api/inventory/temporary`;
 
     // 🛡️ SEGUNDA BARRERA: Forzar conversión numérica explícita antes de enviar el JSON
-    const formattedLines: BackendBatchLine[] = (batches || []).map((b) => ({
-      batch: String(b.batchCode || ""),
-      quantity: Number(b.totalUnits || 0),
+    const formattedLines: BatchLine[] = (batchLine || []).map((b) => ({
+      batchCode: String(b.batchCode || ""),
+      totalUnits: Number(b.totalUnits || 0),
       crates: Number(b.crates || 0),
       looseUnits: Number(b.looseUnits || 0),
       packingDate: b.packingDate,

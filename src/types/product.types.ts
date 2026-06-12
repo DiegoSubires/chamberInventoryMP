@@ -17,7 +17,7 @@ export interface Product {
   subcategory?: string;
   unitsPerCrate?: number;
   totalCrates?: number;
-  batches?: BatchLine[];
+  batchLines?: BatchLine[];
   sortOrder?: number;
   totalUnits?: number;
   visible?: boolean;

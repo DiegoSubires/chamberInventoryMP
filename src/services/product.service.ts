@@ -47,7 +47,7 @@ export const ProductService = {
       category: data.category || "SIN CATEGORIA",
       subcategory: data.subcategory || "",
       unitsPerCrate: data.unitsPerCrate || 0,
-      batches: data.batches || [],
+      batchLines: data.batches || [],
     };
   },
 };
