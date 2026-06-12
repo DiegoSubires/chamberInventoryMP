@@ -224,7 +224,7 @@ export const InventoryService = {
 
     const formattedProducts = productsList.map((prod) => {
       // Mapeamos los lotes limpiando las propiedades de bandejas que no queremos heredar
-      const formattedBatches = (prod.batches || []).map((b) => ({
+      const formattedBatches = (prod.batchLines || []).map((b) => ({
         batchCode: String(b.batchCode || ""),
         totalUnits: Number(b.totalUnits || 0),
         packingDate: b.packingDate, // 📅 Ya viene del flujo temporal
