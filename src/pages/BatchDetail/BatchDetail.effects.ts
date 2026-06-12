@@ -49,15 +49,17 @@ export function useBatchDetailEffects({
         if (isMounted) {
           const productToHydrate = {
             ...fetchedProduct,
-            batchLines: (fetchedProduct.batchLines || []).map((line: any) => ({
-              ...line,
-              // Mapeamos el nombre que viene del API al nombre que usa tu App
-              totalUnits: line.quantity || 0,
-              // Aseguramos que los campos tengan valores por defecto
-              crates: line.crates || 0,
-              looseUnits: line.looseUnits || 0,
-              id: line.id || crypto.randomUUID(), // Asegura que cada línea tenga ID
-            })),
+            batchLines: (fetchedProduct.batchLines || []).map(
+              (line: BatchLine) => ({
+                ...line,
+                // Mapeamos el nombre que viene del API al nombre que usa tu App
+                totalUnits: line.quantity || 0,
+                // Aseguramos que los campos tengan valores por defecto
+                crates: line.crates || 0,
+                looseUnits: line.looseUnits || 0,
+                id: line.id || crypto.randomUUID(), // Asegura que cada línea tenga ID
+              }),
+            ),
           };
 
           console.log(

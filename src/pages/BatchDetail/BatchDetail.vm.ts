@@ -14,5 +14,5 @@ export const Empty_Line: BatchLine = {
   elapsedDays: 0,
   crates: 0,
   looseUnits: 0,
-  totalUnits: 0,
+  quantity: 0,
 };

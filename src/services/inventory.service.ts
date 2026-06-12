@@ -226,7 +226,7 @@ export const InventoryService = {
       // Mapeamos los lotes limpiando las propiedades de bandejas que no queremos heredar
       const formattedBatches = (prod.batchLines || []).map((b) => ({
         batchCode: String(b.batchCode || ""),
-        totalUnits: Number(b.totalUnits || 0),
+        quantity: Number(b.quantity || 0),
         packingDate: b.packingDate, // 📅 Ya viene del flujo temporal
         elapsedDays: Number(b.elapsedDays || 0),
       }));
@@ -236,7 +236,7 @@ export const InventoryService = {
         code: prod.code,
         alternativeDescription: prod.alternativeDescription || prod.description,
         sortOrder: Number(prod.sortOrder || 0), // 📋 Copia de seguridad del orden actual del Excel
-        totalUnits: Number(prod.totalUnits || 0),
+        quantity: Number(prod.quantity || 0),
         batches: formattedBatches,
       };
     });
