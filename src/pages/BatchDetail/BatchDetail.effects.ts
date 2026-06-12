@@ -1,7 +1,7 @@
 // src/pages/BatchDetail/BatchDetail.effects.ts
 import { useEffect } from "react";
 import { InventoryService } from "../../services/inventory.service";
-import { type Product } from "../../types/product.types";
+import { type BatchLine, type Product } from "../../types/product.types";
 
 interface UseBatchDetailEffectsProps {
   productId: string;
@@ -49,9 +49,14 @@ export function useBatchDetailEffects({
         if (isMounted) {
           const productToHydrate = {
             ...fetchedProduct,
-            // Asegúrate de mapear las propiedades si el nombre difiere
-            // Ejemplo: Si el estado espera 'batches' y recibes 'batchLines', debes renombrar:
-            batches: fetchedProduct.batchLines || [],
+            //batches: fetchedProduct.batchLines || [],
+            batchLines: (fetchedProduct.batchLines || []).map(
+              (line: BatchLine) => ({
+                ...line,
+                // Aquí asignamos el valor que viene de tu backend
+                quantity: line.totalUnits || 0,
+              }),
+            ),
           };
 
           console.log(

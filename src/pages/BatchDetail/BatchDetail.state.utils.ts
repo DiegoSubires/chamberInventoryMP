@@ -32,6 +32,14 @@ export const updateBatchLineInList = (
       updatedLine.elapsedDays = calculateElapsedDays(value);
     }
 
+    if (field === "crates" || field === "looseUnits") {
+      updatedLine.totalUnits = calculateLineTotal(
+        Number(updatedLine.crates),
+        Number(updatedLine.looseUnits),
+        unitsPerCrate,
+      );
+    }
+
     // 3. Recalculamos el total (manteniendo tu lógica actual)
     updatedLine.totalUnits =
       Number(updatedLine.crates) * unitsPerCrate +
