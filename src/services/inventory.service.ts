@@ -117,7 +117,7 @@ export const InventoryService = {
     batchLines: BatchLine[],
     operatorName?: string,
   ): Promise<void> {
-    const endpoint = `/api/inventory/temporary`;
+    const endpoint = `/api/inventory/temporary?tenantId=${encodeURIComponent(tenantId)}`;
 
     // Construcción manual y forzada
     const payload = {
