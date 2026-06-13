@@ -16,7 +16,7 @@ export const LayoutApp: React.FC<ExtendedLayoutProps> = ({
 }) => {
   const [state, setState] = useLayoutState();
 
-  useLayoutEffects(tenantId, operatorName, setState);
+  useLayoutEffects(tenantId, setState);
 
   //if (state.loading || !state.config) return <div>Cargando...</div>;
   if (state.loading) {
@@ -35,82 +35,6 @@ export const LayoutApp: React.FC<ExtendedLayoutProps> = ({
       <div>Error crítico al inicializar los datos maestros del Tenant.</div>
     );
   }
-
-  /*console.log(
-    "🎨 [LayoutApp.tsx] Renderizado. Config en estado:",
-    state.config,
-    "Loading:",
-    state.loading,
-  );*/
-
-  /*return (
-    <div className={styles.portalWrapper}>
-      <header className={styles.headerBar}>
-        <div className={styles.headerContainer}>
-          {/* Sección Izquierda: Empresa y App Actual /}
-          <div className={styles.leftSection}>
-            {state.config.logoUrl && (
-              <img
-                src={state.config.logoUrl}
-                alt="Logo"
-                className={styles.logoImage}
-              />
-            )}
-            <div className={styles.brandMeta}>
-              <span className={styles.companyName}>
-                {state.config.businessName || "TraceSync"}
-              </span>
-              <span className={styles.pageLabel}>
-                {state.config.microappName}
-              </span>
-            </div>
-          </div>
-
-          {/* Sección Derecha: Operario y Acciones /}
-          <div className={styles.rightSection}>
-            <div className={styles.userInfo}>
-              <span className={styles.userName}>{operatorName}</span>
-              <span className={styles.userRole}>{operatorRole}</span>
-            </div>
-
-            <div className={styles.actionsContainer}>
-              {/* Botón condicional para volver al Hub central /}
-              {onExitApp && (
-                <button
-                  type="button"
-                  onClick={onExitApp}
-                  className={styles.logoutButton}
-                >
-                  Volver al Hub
-                </button>
-              )}
-
-              {/* Botón permanente de cierre de sesión /}
-              <button
-                type="button"
-                onClick={onLogout}
-                className={styles.logoutButton}
-              >
-                Cerrar Sesión
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Área de Contenido Principal /}
-      <main className={styles.mainContent}>{children}</main>
-
-      {/* Pie de Página Sincronizado /}
-      <footer className={styles.footerBar}>
-        <div className={styles.footerContent}>
-          <p>{state.config.businessName}</p>
-          <p>{state.config.companyAddress}</p>
-        </div>
-      </footer>
-    </div>
-  );
-};*/
 
   return (
     <div className={styles.portalWrapper}>

@@ -36,6 +36,5 @@ export interface OperatorData {
 
 export interface LayoutState {
   config: LayoutData | null;
-  operator: OperatorData | null;
   loading: boolean;
 }
