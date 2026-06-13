@@ -37,5 +37,5 @@ export interface OperatorData {
 export interface LayoutState {
   config: LayoutData | null;
   loading: boolean;
-  operator: { fullName: string; avatarUrl: string; role: string };
+  operator: { fullName: string; avatarUrl: string; role: string } | null;
 }
