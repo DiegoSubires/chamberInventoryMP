@@ -39,6 +39,7 @@ export function AppRouter({
         <BatchDetail
           productId={selectedProductId || ""}
           tenantId={userSession.tenantId}
+          operatorName={userSession.name}
           onBack={() => onNavigate("CATALOG", null)}
           onRegisterSaveAction={onRegisterSaveAction}
         />

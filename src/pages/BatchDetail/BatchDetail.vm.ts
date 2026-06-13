@@ -3,6 +3,7 @@ import { type BatchLine } from "../../types/product.types";
 export interface BatchDetailProps {
   productId: string;
   tenantId: string;
+  operatorName?: string;
   onBack?: () => void;
   onRegisterSaveAction: (fn: () => Promise<void>) => void;
 }

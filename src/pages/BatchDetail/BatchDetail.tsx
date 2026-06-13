@@ -11,6 +11,7 @@ import styles from "./BatchDetail.module.scss";
 export default function BatchDetail({
   productId,
   tenantId,
+  operatorName,
   //onBack,
   onRegisterSaveAction,
 }: BatchDetailProps) {
@@ -18,7 +19,7 @@ export default function BatchDetail({
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   // Inicializamos el hook de estado
-  const state = useBatchDetailState(null);
+  const state = useBatchDetailState(null, operatorName || "Invitado");
 
   useEffect(() => {
     console.log("🔍 [3. Estado actual en el componente]:", state);
@@ -47,7 +48,8 @@ export default function BatchDetail({
           tenantId,
           productId,
           workingDate,
-          state.batchLines, // Enviamos el array completo
+          state.batchLines,
+          operatorName,
         );
 
         // Despachamos evento global para forzar al catálogo de Home a refrescar totales

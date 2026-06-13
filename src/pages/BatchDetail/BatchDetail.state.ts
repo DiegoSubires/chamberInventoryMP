@@ -3,7 +3,11 @@ import { useState, useCallback, useMemo } from "react";
 import { type BatchLine, type Product } from "../../types/product.types";
 import { updateBatchLineInList } from "./BatchDetail.state.utils";
 
-export function useBatchDetailState(initialProduct: Product | null) {
+export function useBatchDetailState(
+  initialProduct: Product | null,
+  operatorName: string,
+) {
+  const [operator] = useState<string>(operatorName);
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [batchLines, setBatchLines] = useState<BatchLine[]>(
     initialProduct?.batchLines ?? [],
@@ -62,6 +66,7 @@ export function useBatchDetailState(initialProduct: Product | null) {
     product,
     batchLines,
     grandTotalUnits,
+    operator,
     hydrateState,
     updateField,
     addBatchRow,

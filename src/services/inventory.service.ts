@@ -98,6 +98,12 @@ export const InventoryService = {
       lineas: formattedLines.length,
     });
 
+    console.log("🚀 [DEBUG InventoryService] Payload a enviar:", {
+      endpoint,
+      payload,
+      stringified: JSON.stringify(payload),
+    });
+
     await apiClient(endpoint, {
       method: "PUT",
       body: JSON.stringify(payload),
