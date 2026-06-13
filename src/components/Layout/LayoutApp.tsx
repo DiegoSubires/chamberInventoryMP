@@ -16,7 +16,7 @@ export const LayoutApp: React.FC<ExtendedLayoutProps> = ({
 }) => {
   const [state, setState] = useLayoutState();
 
-  useLayoutEffects(tenantId, setState);
+  useLayoutEffects(tenantId, operatorName, setState);
 
   //if (state.loading || !state.config) return <div>Cargando...</div>;
   if (state.loading) {

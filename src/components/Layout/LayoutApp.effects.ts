@@ -1,51 +1,44 @@
-// src/components/LayoutApp/LayoutApp.effects.ts
+// src/components/Layout/LayoutApp.effects.ts
 import { useEffect } from "react";
 import { TenantService } from "../../services/tenant.service";
-import { type LayoutState } from "./LayoutApp.vm";
+import { type LayoutState, type LayoutData } from "./LayoutApp.vm";
 
 export const useLayoutEffects = (
   tenantId: string,
-  operatorId: string,
+  operatorName: string,
   setState: React.Dispatch<React.SetStateAction<LayoutState>>,
 ) => {
   useEffect(() => {
     const load = async () => {
-      /*console.log(
-        `🎬 [useLayoutEffects] Iniciando efecto de carga para [Tenant: ${tenantId}] y [Operario: ${operatorId}]`,
-      );*/
       try {
-        const data = await TenantService.getLayoutInfo(tenantId, operatorId);
-        /*console.log(
-          "✅ [useLayoutEffects] Datos unificados devueltos por el servicio con éxito:",
-          data,
-        );*/
+        const config = await TenantService.getTenantConfig(tenantId);
+
+        // Mapeamos TenantConfig -> LayoutData aquí
+        const mappedConfig: LayoutData = {
+          logoUrl: config.logo_url || config.logoUrl || "/default-logo.png",
+          businessName:
+            config.nombre_empresa || config.businessName || "Empresa",
+          microappName: "Recuento de Cámaras", // O el valor que corresponda
+          operatorAvatarUrl: "", // Este campo no viene del tenant, se deja vacío o se gestiona
+          companyAddress:
+            config.direccion || config.companyAddress || "Sin dirección",
+        };
 
         setState({
-          config: data.config,
-          operator: data.operator,
+          config: mappedConfig,
+          operator: {
+            fullName: operatorName,
+            avatarUrl: "",
+            role: "Operario",
+          },
           loading: false,
         });
       } catch (err) {
-        console.error(
-          "💥 [useLayoutEffects] ERROR detectado y atrapado en el catch:",
-          err,
-        );
-        setState((prev) => {
-          console.log(
-            "⚠️ [useLayoutEffects] Congelando estado previo debido al fallo:",
-            prev,
-          );
-          return { ...prev, loading: false };
-        });
+        setState((prev) => ({ ...prev, loading: false }));
+        console.log(err);
       }
     };
 
-    if (tenantId) {
-      load();
-    } else {
-      console.warn(
-        "⚠️ [useLayoutEffects] No se ejecuta la carga porque 'tenantId' está vacío o undefined.",
-      );
-    }
-  }, [tenantId, operatorId, setState]);
+    if (tenantId) load();
+  }, [tenantId, operatorName, setState]);
 };
