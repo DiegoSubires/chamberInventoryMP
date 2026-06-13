@@ -13,8 +13,8 @@ export const BatchRowFields: React.FC<BatchRowFieldsProps> = ({
     <div className={styles.verticalFormBody}>
       {/* Lote (DDMM/OO) */}
       <BatchCodeInput
-        value={linea.batchCode}
-        onChange={(val) => onChangeField(linea.id ?? "", "batchCode", val)}
+        value={linea.batch}
+        onChange={(val) => onChangeField(linea.id ?? "", "batch", val)}
       />
 
       {/* F. Envasado (con calendario nativo) */}

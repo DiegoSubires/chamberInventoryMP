@@ -9,7 +9,7 @@ export interface BatchDetailProps {
 
 export const Empty_Line: BatchLine = {
   id: "new-batch-placeholder",
-  batchCode: "",
+  batch: "",
   packingDate: "",
   elapsedDays: 0,
   crates: 0,

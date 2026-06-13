@@ -2,38 +2,17 @@
 import { apiClient } from "./apiClient";
 import { type BatchLine, type Product } from "../types/product.types";
 
-/*interface RawProductWithCounts {
-  _id?: string;
-  id?: string;
-  code?: string;
-  description?: string;
-  alternativeDescription?: string;
-  category?: string;
-  subcategory?: string;
-  unitsPerCrate?: number;
-  visible?: boolean;
-  sortOrder?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  batches?: any[];
-  totalCrates?: number;
-  totalUnits?: number;
-}
-
-export interface BackendBatchLine {
-  batch: string;
-  quantity: number;
-  crates: number;
-  looseUnits: number;
-  packingDate?: string;
-  elapsedDays: number;
-}*/
-
-// 1. Definimos el contrato (Debe coincidir con HomeSummarySchema de Zod)
-
 export interface HomeSummaryResponse {
   tenantId: string;
   date: string;
   summary: Product[];
+}
+export interface SaveTemporaryCountPayload {
+  tenantId: string;
+  productId: string;
+  countDate: string;
+  batchLines: BatchLine[];
+  operator?: string;
 }
 
 export const InventoryService = {
@@ -82,126 +61,46 @@ export const InventoryService = {
   },
 
   /**
-   * 1. Carga el catálogo blindando cualquier respuesta inesperada del servidor
-   //
-  async fetchCatalogWithActiveCounts(
-    tenantId: string,
-    workingDate: string,
-  ): Promise<Product[]> {
-    if (!tenantId || !workingDate) return [];
-
-    const endpoint = `/api/inventory/products-with-counts?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
-
-    try {
-      // Reemplazamos fetch por tu apiClient (el control res.ok ya va dentro)
-      const data: RawProductWithCounts[] = await apiClient(endpoint);
-
-      if (!Array.isArray(data)) {
-        console.warn(
-          "⚠️ [InventoryService] La respuesta del backend no es un array válido.",
-        );
-        return [];
-      }
-
-      return data.map((prod) => {
-        // 🛡️ Tu blindaje interno de lotes intacto
-        const rawBatches = Array.isArray(prod.batches) ? prod.batches : [];
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const safeBatches: BatchLine[] = rawBatches.map((b: any) => ({
-          id: b.id || Math.random().toString(36).substr(2, 9),
-          batchCode: b.batch || b.batchCode || "",
-          totalUnits: Number(b.quantity ?? b.totalUnits ?? 0),
-          crates: Number(b.crates ?? 0),
-          looseUnits: Number(b.looseUnits ?? 0),
-          packingDate: b.packingDate || "",
-          elapsedDays: Number(b.elapsedDays ?? 0),
-        }));
-
-        return {
-          id: prod.id || prod._id || "",
-          code: prod.code || "S/C",
-          description: prod.description || "Sin descripción",
-          alternativeDescription: prod.alternativeDescription || "",
-          category: prod.category || "SIN CATEGORIA",
-          subcategory: prod.subcategory || "",
-          unitsPerCrate: Number(prod.unitsPerCrate || 0),
-          visible: prod.visible !== undefined ? prod.visible : true,
-          sortOrder: Number(prod.sortOrder || 0),
-          batches: safeBatches,
-          totalCrates: Number(prod.totalCrates || 0),
-          totalUnits: Number(prod.totalUnits || 0),
-        };
-      });
-    } catch (error) {
-      console.error(
-        "🚨 [InventoryService] Fallo crítico recuperando catálogo:",
-        error,
-      );
-      return [];
-    }
-  },*/
-
-  /**
-   * 2. Guarda el borrador parseando datos a tipos primitivos nativos
+   * Guarda el borrador parseando datos a tipos primitivos nativos
    */
   async saveProductBatches(
     tenantId: string,
     productId: string,
     workingDate: string,
-    batchLine: BatchLine[],
+    batchLines: BatchLine[],
+    operatorName?: string, // Lo recibimos como parámetro opcional
   ): Promise<void> {
-    //const url = `http://localhost:4000/api/inventory/temporary`;
     const endpoint = `/api/inventory/temporary`;
 
-    // 🛡️ SEGUNDA BARRERA: Forzar conversión numérica explícita antes de enviar el JSON
-    const formattedLines: BatchLine[] = (batchLine || []).map((b) => ({
-      batchCode: String(b.batchCode || ""),
+    // 1. Mapeo: Ajustamos los nombres al esquema Zod del backend
+    const formattedLines = (batchLines || []).map((b) => ({
+      batch: String(b.batch || ""),
       quantity: Number(b.quantity || 0),
       crates: Number(b.crates || 0),
       looseUnits: Number(b.looseUnits || 0),
-      packingDate: b.packingDate,
+      packingDate: b.packingDate || null,
       elapsedDays: Number(b.elapsedDays || 0),
     }));
 
-    /*const payloadString = JSON.stringify({
+    const payload: SaveTemporaryCountPayload = {
       tenantId,
       productId,
       countDate: workingDate,
       batchLines: formattedLines,
+      operator: operatorName,
+    };
+
+    // 2. Log de auditoría (Front-end)
+    console.log(`📝 [Auditoría] Guardando borrador en ${endpoint}:`, {
+      timestamp: new Date().toISOString(),
+      operator: operatorName,
+      productId,
+      lineas: formattedLines.length,
     });
-
-    /*console.log(
-      "📤 [InventoryService SAVE] Payload JSON que sale hacia la API:",
-      JSON.stringify(payloadString, null, 2),
-    );//
-
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: payloadString,
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(
-        "❌ [InventoryService SAVE] Error en la API remota:",
-        errorText,
-      );
-      throw new Error(`Error en persistencia temporal: ${errorText}`);
-    }
-    /*console.log(
-      "📥 [InventoryService SAVE] Respuesta OK del Servidor (PUT temporal exitoso).",
-    );*/
 
     await apiClient(endpoint, {
       method: "PUT",
-      body: JSON.stringify({
-        tenantId,
-        productId,
-        countDate: workingDate,
-        batchLines: formattedLines,
-      }),
+      body: JSON.stringify(payload),
     });
   },
 
@@ -225,7 +124,7 @@ export const InventoryService = {
     const formattedProducts = productsList.map((prod) => {
       // Mapeamos los lotes limpiando las propiedades de bandejas que no queremos heredar
       const formattedBatches = (prod.batchLines || []).map((b) => ({
-        batchCode: String(b.batchCode || ""),
+        batchCode: String(b.batch || ""),
         quantity: Number(b.quantity || 0),
         packingDate: b.packingDate, // 📅 Ya viene del flujo temporal
         elapsedDays: Number(b.elapsedDays || 0),

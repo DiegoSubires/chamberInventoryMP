@@ -1,7 +1,7 @@
 export interface BatchLine {
   id?: string;
-  batchCode: string;
-  packingDate: string;
+  batch: string;
+  packingDate: string | null;
   elapsedDays: number;
   crates: number;
   looseUnits: number;

@@ -33,7 +33,7 @@ export function useBatchDetailState(initialProduct: Product | null) {
   const addBatchRow = () => {
     const newLine: BatchLine = {
       id: crypto.randomUUID(),
-      batchCode: "",
+      batch: "",
       packingDate: new Date().toISOString().split("T")[0],
       elapsedDays: 0,
       crates: 0,
