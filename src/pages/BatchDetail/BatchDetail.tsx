@@ -54,15 +54,26 @@ export default function BatchDetail({
 
         // Despachamos evento global para forzar al catálogo de Home a refrescar totales
         window.dispatchEvent(new Event("refresh-chamber-inventory"));
-      } catch (error) {
-        console.error("❌ Error persistiendo cambios del lote:", error);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.error("❌ Error persistiendo cambios del lote:", error.message);
+        if (error.response) {
+          console.error("Detalles del servidor:", await error.response.json());
+        }
         alert("Error de red: No se pudo consolidar el borrador en Atlas.");
         throw error; // Propagamos el error para mitigar cierres en falso
       } finally {
         setIsSaving(false);
       }
     }
-  }, [state.isDirty, state.batchLines, tenantId, productId, workingDate]);
+  }, [
+    state.isDirty,
+    state.batchLines,
+    tenantId,
+    productId,
+    workingDate,
+    operatorName,
+  ]);
 
   // 🔌 2. Registramos la función de guardado en el estado centralizado del padre
   useEffect(() => {
