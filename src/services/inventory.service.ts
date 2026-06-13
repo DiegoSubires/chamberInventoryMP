@@ -63,7 +63,7 @@ export const InventoryService = {
   /**
    * Guarda el borrador parseando datos a tipos primitivos nativos
    */
-  async saveProductBatches(
+  /*async saveProductBatches(
     tenantId: string,
     productId: string,
     workingDate: string,
@@ -106,6 +106,38 @@ export const InventoryService = {
 
     await apiClient(endpoint, {
       method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  },*/
+
+  async saveProductBatches(
+    tenantId: string,
+    productId: string,
+    workingDate: string,
+    batchLines: BatchLine[],
+    operatorName?: string,
+  ): Promise<void> {
+    const endpoint = `/api/inventory/temporary`;
+
+    // Construcción manual y forzada
+    const payload = {
+      tenantId: tenantId,
+      productId: productId,
+      countDate: workingDate,
+      batchLines: batchLines,
+      operator: operatorName || "Invitado",
+    };
+
+    console.log(
+      "🚀 Payload estricto antes de enviar:",
+      JSON.stringify(payload),
+    );
+
+    return apiClient(endpoint, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(payload),
     });
   },
