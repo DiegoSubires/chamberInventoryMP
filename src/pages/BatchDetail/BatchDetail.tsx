@@ -40,6 +40,18 @@ export default function BatchDetail({
 
   const handleSaveProductBatches = useCallback(async () => {
     // ⚡ Solo ejecutamos la escritura en Atlas si el operario alteró celdas
+    console.log("🔍 [DEBUG Guardado] Iniciando PUT");
+    console.log("Valores recibidos:", {
+      tenantId,
+      productId,
+      operator: state.operator,
+    });
+
+    if (!tenantId) {
+      console.error("❌ ERROR CRÍTICO: tenantId es nulo o indefinido");
+      return;
+    }
+
     if (state.isDirty) {
       setIsSaving(true);
       try {
@@ -72,6 +84,7 @@ export default function BatchDetail({
     tenantId,
     productId,
     workingDate,
+    state.operator,
     operatorName,
   ]);
 
