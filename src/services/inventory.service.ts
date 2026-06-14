@@ -119,13 +119,23 @@ export const InventoryService = {
   ): Promise<void> {
     const endpoint = `/api/inventory/temporary?tenantId=${encodeURIComponent(tenantId)}`;
 
+    // Limpieza de datos para satisfacer a Zod
+    const sanitizedBatchLines = batchLines.map((line) => ({
+      ...line,
+      batch: line.batch || "",
+      quantity: Number(line.quantity),
+      crates: Number(line.crates),
+      looseUnits: Number(line.looseUnits),
+      elapsedDays: Number(line.elapsedDays),
+    }));
+
     // Construcción manual y forzada
     const payload = {
-      tenantId: tenantId,
-      productId: productId,
+      tenantId,
+      productId,
       countDate: workingDate,
-      batchLines: batchLines,
-      operator: operatorName || "Invitado",
+      batchLines: sanitizedBatchLines,
+      operator: operatorName,
     };
 
     console.log(
