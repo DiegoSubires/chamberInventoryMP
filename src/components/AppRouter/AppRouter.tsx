@@ -32,6 +32,7 @@ export function AppRouter({
       {currentScreen === "CATALOG" ? (
         <Home
           userSession={userSession}
+          tenantId={userSession.tenantId}
           onNavigate={onNavigate}
           onRegisterFinalizeAction={onRegisterFinalizeAction}
         />

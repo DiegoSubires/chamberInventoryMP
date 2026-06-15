@@ -15,6 +15,7 @@ interface HomeProps {
     tenantId: string;
     name: string;
   };
+  tenantId: string;
   onNavigate: (screen: ScreenView, productId: string | null) => void;
   //onRegisterFinalizeAction: (fn: () => Promise<void>) => void;
   onRegisterFinalizeAction: (
@@ -25,6 +26,7 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({
   userSession,
+  tenantId,
   onNavigate,
   onRegisterFinalizeAction,
 }) => {
@@ -179,14 +181,14 @@ export const Home: React.FC<HomeProps> = ({
 
       // LOG 2: Payload preparado (antes de enviarlo)
       console.log("📦 [Home] Payload a enviar:", {
-        tenantId: userSession.tenantId,
+        tenantId: tenantId,
         date: workingDate,
         productsCount: state.products.length,
       });
 
       // 2. Usamos state.products en lugar de una variable inexistente
       await InventoryService.finalizeInventory(
-        userSession.tenantId,
+        tenantId,
         workingDate,
         userSession.name,
         productsToFinalize,
