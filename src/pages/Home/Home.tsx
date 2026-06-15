@@ -127,7 +127,7 @@ export const Home: React.FC<HomeProps> = ({
     }
   }, [workingDate, userSession.name]);*/
 
-  const handleFinalizeInventory = useCallback(async () => {
+  /*const handleFinalizeInventory = useCallback(async () => {
     const confirmClose = window.confirm(
       `⚠️ ¿Estás SEGURO de que deseas CERRAR definitivamente el recuento del día ${workingDate}?\n\nEsta acción archivará los lotes en el histórico inmutable y vaciará los borradores de trabajo.`,
     );
@@ -155,7 +155,61 @@ export const Home: React.FC<HomeProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [workingDate, userSession.tenantId, userSession.name, setLoading]);
+  }, [workingDate, userSession.tenantId, userSession.name, setLoading]);*/
+
+  // 1. Definimos la función usando 'state.products' que viene de useHomeState
+  const handleFinalizeInventory = useCallback(async () => {
+    //console.log(`🚀 [Home] Iniciando finalización de jornada: ${workingDate} para ${userSession.tenantId}`);
+    const confirmClose = window.confirm(
+      `⚠️ ¿Estás SEGURO de que deseas CERRAR definitivamente el recuento del día ${workingDate}?`,
+    );
+
+    if (!confirmClose) return;
+
+    console.log(
+      `🚀 [Home] Iniciando finalización de jornada: ${workingDate} para ${userSession.tenantId}`,
+    );
+
+    try {
+      setLoading(true);
+
+      // LOG 2: Payload preparado (antes de enviarlo)
+      console.log("📦 [Home] Payload a enviar:", {
+        tenantId: userSession.tenantId,
+        date: workingDate,
+        productsCount: state.products.length,
+      });
+
+      // 2. Usamos state.products en lugar de una variable inexistente
+      await InventoryService.finalizeInventory(
+        userSession.tenantId,
+        workingDate,
+        userSession.name,
+        state.products,
+      );
+
+      // LOG 3: Éxito
+      console.log("✅ [Home] Backend respondió con éxito. Recargando...");
+
+      alert(`✅ Jornada consolidada con éxito.`);
+      window.location.reload();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // LOG 4: Error detallado
+      console.error("❌ [Home] Error capturado en finalizeInventory:", error);
+      alert(
+        `🚨 Error: ${error.message || "No se pudo conectar con el servidor."}`,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    workingDate,
+    userSession.tenantId,
+    userSession.name,
+    state.products,
+    setLoading,
+  ]);
 
   /*useEffect(() => {
     onRegisterFinalizeAction(handleFinalizeInventory);

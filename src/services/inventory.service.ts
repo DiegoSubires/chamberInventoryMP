@@ -61,7 +61,7 @@ export const InventoryService = {
   },
 
   /**
-   * Guarda el borrador parseando datos a tipos primitivos nativos
+   * Guarda el borrador (datos temporales) parseando datos a tipos primitivos nativos
    */
   /*async saveProductBatches(
     tenantId: string,
@@ -153,6 +153,12 @@ export const InventoryService = {
   },
 
   /**
+   * Nuevo servicio para finalizar los recuentos por refactorización del backend en módulos.
+   * Unificados saveFinalizedInventory y finalizeDay
+   * ¿Soporta re-envíos en caso de que se corrijan errores.?
+   */
+
+  /**
    * Envía el inventario definitivo al servidor para su consolidación y archivo.
    * Soporta re-envíos en caso de que se corrijan errores.
    */
@@ -230,6 +236,102 @@ export const InventoryService = {
     });
   },
 
+  /*async finalizeInventory(
+    tenantId: string,
+    workingDate: string,
+    operatorName: string,
+    productsList: Product[],
+  ): Promise<void> {
+    const endpoint = `/api/inventory/finalize`;
+
+    // 1. Limpieza y formateo de datos (Preparación del payload)
+    const formattedProducts = productsList.map((prod) => ({
+      productId: prod.id,
+      batchLines: (prod.batchLines || []).map((b) => ({
+        batch: String(b.batch || ""),
+        quantity: Number(b.quantity || 0),
+        crates: Number(b.crates || 0),
+        looseUnits: Number(b.looseUnits || 0),
+        packingDate: b.packingDate,
+        elapsedDays: Number(b.elapsedDays || 0),
+      })),
+    }));
+
+    // 2. Envío único hacia el endpoint unificado
+    await apiClient(endpoint, {
+      method: "POST",
+      body: JSON.stringify({
+        tenantId,
+        countDate: workingDate,
+        operatorName,
+        products: formattedProducts,
+        comments: "Finalización desde interfaz", // Puedes añadir un campo de comentarios si lo deseas
+      }),
+    });
+
+    console.log(
+      "✅ [InventoryService] Inventario consolidado y jornada cerrada con éxito.",
+    );
+  }*/
+  async finalizeInventory(
+    tenantId: string,
+    workingDate: string,
+    operatorName: string,
+    productsList: Product[],
+  ): Promise<void> {
+    const endpoint = `/api/inventory/finalize`;
+
+    // LOG 1: Inicio del proceso
+    console.log(
+      `🛠️ [InventoryService] Preparando consolidación: ${workingDate} | Tenant: ${tenantId}`,
+    );
+
+    // 1. Limpieza y formateo
+    const formattedProducts = productsList.map((prod) => ({
+      productId: prod.id,
+      batchLines: (prod.batchLines || []).map((b) => ({
+        batch: String(b.batch || ""),
+        quantity: Number(b.quantity || 0),
+        crates: Number(b.crates || 0),
+        looseUnits: Number(b.looseUnits || 0),
+        packingDate: b.packingDate,
+        elapsedDays: Number(b.elapsedDays || 0),
+      })),
+    }));
+
+    // LOG 2: Diagnóstico del payload (antes de enviarlo)
+    // Esto te permite ver si los datos llegaron "vacíos" o mal formados antes de tocar el backend
+    console.log(
+      `📦 [InventoryService] Payload generado con ${formattedProducts.length} productos.`,
+    );
+
+    try {
+      // 2. Envío al backend
+      await apiClient(endpoint, {
+        method: "POST",
+        body: JSON.stringify({
+          tenantId,
+          countDate: workingDate,
+          operatorName,
+          products: formattedProducts,
+          comments: "Finalización desde interfaz",
+        }),
+      });
+
+      // LOG 3: Éxito
+      console.log(
+        "✅ [InventoryService] Respuesta recibida del servidor: Inventario consolidado.",
+      );
+    } catch (error) {
+      // LOG 4: Error específico del frontend (ej. fallo de red o error de API)
+      console.error(
+        "❌ [InventoryService] Error en la petición POST /finalize:",
+        error,
+      );
+      throw error; // Relanzamos para que el componente Home pueda manejar el alert
+    }
+  },
+
   /**
    * 3. Envía la orden de cierre definitivo para consolidar el histórico del día
    */
@@ -294,7 +396,7 @@ export const InventoryService = {
   /**
    * Obtiene el detalle de un producto dentro del contexto de inventario
    */
-  async fetchProductInventoryDetail(
+  /*async fetchProductInventoryDetail(
     productId: string,
     tenantId: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -302,5 +404,5 @@ export const InventoryService = {
     // Al ser un detalle de inventario, usamos la ruta de productos pero centralizada aquí
     const endpoint = `/api/products/${productId}?tenant=${encodeURIComponent(tenantId)}`;
     return await apiClient(endpoint);
-  },
+  },*/
 };
