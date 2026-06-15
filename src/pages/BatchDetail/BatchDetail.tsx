@@ -93,12 +93,20 @@ export default function BatchDetail({
 
     setIsSaving(true);
     try {
-      // El servicio ahora filtra internamente si las líneas están vacías
+      const cleanedBatchLines = state.batchLines.map((line) => ({
+        batch: line.batch || "",
+        quantity: Number(line.quantity || 0),
+        crates: Number(line.crates || 0),
+        looseUnits: Number(line.looseUnits || 0),
+        packingDate: line.packingDate || null,
+        elapsedDays: Number(line.elapsedDays || 0),
+      }));
+
       await InventoryService.saveProductBatches(
         tenantId,
         productId,
         workingDate,
-        state.batchLines,
+        cleanedBatchLines,
         operatorName,
       );
 
