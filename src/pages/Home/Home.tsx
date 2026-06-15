@@ -172,6 +172,16 @@ export const Home: React.FC<HomeProps> = ({
       `🚀 [Home] Iniciando finalización de jornada: ${workingDate} para ${userSession.tenantId}`,
     );
 
+    console.log("🔍 [Debug] Finalizando con:", {
+      tenantId,
+      productsCount: state.products?.length,
+    });
+
+    if (!tenantId || state.products.length === 0) {
+      console.error("⚠️ Datos insuficientes para finalizar");
+      return;
+    }
+
     try {
       setLoading(true);
 
