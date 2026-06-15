@@ -24,18 +24,30 @@ export function useBatchDetailState(
   }, []);*/
   const hydrateState = useCallback(
     (data: Product) => {
+      console.log("🔍 [HydDebug1] Entrando a hydrateState con data:", data);
       if (!data) return;
 
       setProduct(data);
 
       // Si el backend viene vacío (producto nuevo), inicializamos con una fila vacía para la UI
+      /*const lines =
+        data.batchLines && data.batchLines.length > 0
+          ? data.batchLines
+          : [getEmptyBatchLine()];*/
       const lines =
         data.batchLines && data.batchLines.length > 0
           ? data.batchLines
-          : [getEmptyBatchLine()];
+          : [{ ...getEmptyBatchLine(), id: crypto.randomUUID() }];
+
+      console.log("🔍 [HydDebug2] Líneas preparadas para el estado:", lines);
 
       setBatchLines(lines);
       setInitialLines(JSON.parse(JSON.stringify(lines)));
+
+      console.log(
+        "🔍 [HydDebug3] Estado actualizado. ¿Es la primera línea editable?",
+        lines[0],
+      );
     },
     [setProduct, setBatchLines, setInitialLines],
   );

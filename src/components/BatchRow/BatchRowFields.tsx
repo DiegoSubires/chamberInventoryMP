@@ -9,6 +9,7 @@ export const BatchRowFields: React.FC<BatchRowFieldsProps> = ({
   linea,
   onChangeField,
 }) => {
+  console.log("Renderizando fila ID:", linea.id, "Valor actual:", linea.batch);
   return (
     <div className={styles.verticalFormBody}>
       {/* Lote (DDMM/OO) */}

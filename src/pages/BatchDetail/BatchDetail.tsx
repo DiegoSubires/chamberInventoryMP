@@ -161,7 +161,7 @@ export default function BatchDetail({
           <div className={styles.batchesSection}>
             {state.batchLines.map((line, index) => (
               <BatchRow
-                key={line.id}
+                key={line.id || `temp-${index}`}
                 linea={line}
                 index={index}
                 unitsPerCrate={state.product!.unitsPerCrate}
