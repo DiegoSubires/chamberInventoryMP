@@ -103,9 +103,19 @@ export default function BatchDetail({
       );
 
       window.dispatchEvent(new Event("refresh-chamber-inventory"));
-    } catch (error) {
-      console.log(error);
-      alert("Error al guardar el recuento.");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.response) {
+        const errorData = await error.response.json();
+        console.error(
+          "❌ Detalles del error de Zod (Backend):",
+          JSON.stringify(errorData, null, 2),
+        );
+        alert(
+          `Error de validación: ${JSON.stringify(errorData.details || errorData.error)}`,
+        );
+      }
+      throw error;
     } finally {
       setIsSaving(false);
     }
