@@ -225,6 +225,7 @@ export const Home: React.FC<HomeProps> = ({
     userSession.name,
     state.products,
     setLoading,
+    tenantId,
   ]);
 
   /*useEffect(() => {
