@@ -185,9 +185,14 @@ export const Home: React.FC<HomeProps> = ({
     try {
       setLoading(true);
 
-      const productsToFinalize = state.products.filter(
-        (p) => p.batchLines && p.batchLines.length > 0,
-      );
+      const productsToFinalize = state.products.filter((p) => {
+        const hasBatches = p.batchLines && p.batchLines.length > 0;
+        if (!hasBatches) {
+          // Si este log aparece 113 veces, ahí tienes el problema
+          console.log(`⚠️ Producto ${p.id} no tiene batchLines`, p);
+        }
+        return hasBatches;
+      });
 
       // LOG 2: Payload preparado (antes de enviarlo)
       console.log("📦 [Home] Payload a enviar:", {
