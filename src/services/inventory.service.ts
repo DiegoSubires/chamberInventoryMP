@@ -220,11 +220,7 @@ export const InventoryService = {
    * ¿Soporta re-envíos en caso de que se corrijan errores.?
    */
 
-  /**
-   * Envía el inventario definitivo al servidor para su consolidación y archivo.
-   * Soporta re-envíos en caso de que se corrijan errores.
-   */
-  async saveFinalizedInventory(
+  /*async saveFinalizedInventory(
     tenantId: string,
     workingDate: string,
     operatorName: string,
@@ -235,7 +231,7 @@ export const InventoryService = {
 
     /*console.log(
       `🔒 [InventoryService] Enviando GUARDADO DEFINITIVO para el día ${workingDate} (Operario: ${operatorName})`,
-    );*/
+    );//
 
     const formattedProducts = productsList.map((prod) => {
       // Mapeamos los lotes limpiando las propiedades de bandejas que no queremos heredar
@@ -254,9 +250,9 @@ export const InventoryService = {
         quantity: Number(prod.quantity || 0),
         batches: formattedBatches,
       };
-    });
+    });*/
 
-    /*console.log(
+  /*console.log(
       `🔒 [InventoryService] Solicitando GUARDADO DEFINITIVO para el día ${workingDate}. (Operario: ${operatorName})`,
     );
 
@@ -286,7 +282,7 @@ export const InventoryService = {
 
     console.log(
       "✅ [InventoryService] Registro guardado con éxito en mp_ch_finalized_inventories.",
-    );*/
+    );//
     await apiClient(endpoint, {
       method: "POST",
       body: JSON.stringify({
@@ -342,14 +338,20 @@ export const InventoryService = {
     productsList: Product[],
   ): Promise<void> {
     const endpoint = `/api/inventory/finalize`;
+    const productsToFinalize = productsList.filter(
+      (p) => p.batchLines && p.batchLines.length > 0,
+    );
 
     // LOG 1: Inicio del proceso
     console.log(
       `🛠️ [InventoryService] Preparando consolidación: ${workingDate} | Tenant: ${tenantId}`,
     );
+    console.log(
+      `🛠️ Preparando consolidación para ${productsToFinalize.length} productos.`,
+    );
 
     // 1. Limpieza y formateo
-    const formattedProducts = productsList.map((prod) => ({
+    const formattedProducts = productsToFinalize.map((prod) => ({
       productId: prod.id,
       batchLines: (prod.batchLines || []).map((b) => ({
         batch: String(b.batch || ""),
@@ -396,7 +398,7 @@ export const InventoryService = {
 
   /**
    * 3. Envía la orden de cierre definitivo para consolidar el histórico del día
-   */
+   //
   async finalizeDay(
     tenantId: string,
     workingDate: string,
@@ -421,7 +423,7 @@ export const InventoryService = {
       throw new Error(data.error || "Fallo crítico al finalizar el recuento.");
     }
 
-    return data;*/
+    return data;//
     return apiClient(endpoint, {
       method: "POST",
       body: JSON.stringify({
@@ -430,7 +432,7 @@ export const InventoryService = {
         operatorName,
       }),
     });
-  },
+  },*/
 
   /**
    * Verifica si una jornada ya está cerrada de forma definitiva
