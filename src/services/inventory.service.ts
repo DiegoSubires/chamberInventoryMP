@@ -39,7 +39,7 @@ export const InventoryService = {
    * Obtiene el detalle de un producto específico, incluyendo sus líneas de lote (recuento)
    * para una fecha y tenant determinados.
    */
-  async fetchProductWithActiveCountsById(
+  /*async fetchProductWithActiveCountsById(
     tenantId: string,
     productId: string,
     workingDate: string,
@@ -51,6 +51,31 @@ export const InventoryService = {
       const response = await apiClient(endpoint);
 
       return response.product as Product;
+    } catch (error) {
+      console.error(
+        `🚨 [InventoryService] Error al obtener detalle del producto ${productId}:`,
+        error,
+      );
+      throw error;
+    }
+  },*/
+  async fetchProductWithActiveCountsById(
+    tenantId: string,
+    productId: string,
+    workingDate: string,
+  ): Promise<Product> {
+    const endpoint = `/api/inventory/product-id?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}&id=${encodeURIComponent(productId)}`;
+
+    try {
+      const response = await apiClient(endpoint);
+
+      // Si el backend devuelve el objeto product directamente, lo retornamos.
+      // Si la respuesta es un 200 pero el producto está vacío, aseguramos la estructura:
+      return (response.product || {
+        id: productId,
+        batchLines: [],
+        alternativeDescription: "Nuevo recuento",
+      }) as Product;
     } catch (error) {
       console.error(
         `🚨 [InventoryService] Error al obtener detalle del producto ${productId}:`,

@@ -16,11 +16,27 @@ export function useBatchDetailState(
   const [initialLines, setInitialLines] = useState<BatchLine[]>([]);
 
   // Hidratar el estado cuando los efectos terminen la carga asíncrona
-  const hydrateState = useCallback((data: Product) => {
+  /*const hydrateState = useCallback((data: Product) => {
     setProduct(data);
     setBatchLines(data.batchLines || []);
     setInitialLines(JSON.parse(JSON.stringify(data.batchLines || [])));
-  }, []);
+  }, []);*/
+  const hydrateState = useCallback(
+    (data: Product) => {
+      if (!data) return; // Protección extra
+
+      // Asignamos el producto (si es nuevo, al menos tiene el ID)
+      setProduct(data);
+
+      // Aseguramos que batchLines sea siempre un array, incluso si viene undefined
+      const lines = data.batchLines || [];
+      setBatchLines(lines);
+
+      // Clonación profunda segura para el estado inicial
+      setInitialLines(JSON.parse(JSON.stringify(lines)));
+    },
+    [setProduct, setBatchLines, setInitialLines],
+  );
 
   const updateField = (
     id: string,
