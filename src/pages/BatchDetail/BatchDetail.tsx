@@ -38,7 +38,7 @@ export default function BatchDetail({
     hydrateState: state.hydrateState,
   });
 
-  const handleSaveProductBatches = useCallback(async () => {
+  /*const handleSaveProductBatches = useCallback(async () => {
     // ⚡ Solo ejecutamos la escritura en Atlas si el operario alteró celdas
     console.log("🔍 [DEBUG Guardado] Iniciando PUT");
     console.log("Valores recibidos:", {
@@ -85,6 +85,36 @@ export default function BatchDetail({
     productId,
     workingDate,
     state.operator,
+    operatorName,
+  ]);*/
+
+  const handleSaveProductBatches = useCallback(async () => {
+    if (!state.isDirty) return; // Si no hay cambios, no hacemos nada
+
+    setIsSaving(true);
+    try {
+      // El servicio ahora filtra internamente si las líneas están vacías
+      await InventoryService.saveProductBatches(
+        tenantId,
+        productId,
+        workingDate,
+        state.batchLines,
+        operatorName,
+      );
+
+      window.dispatchEvent(new Event("refresh-chamber-inventory"));
+    } catch (error) {
+      console.log(error);
+      alert("Error al guardar el recuento.");
+    } finally {
+      setIsSaving(false);
+    }
+  }, [
+    state.isDirty,
+    state.batchLines,
+    tenantId,
+    productId,
+    workingDate,
     operatorName,
   ]);
 

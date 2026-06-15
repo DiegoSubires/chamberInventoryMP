@@ -2,6 +2,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { type BatchLine, type Product } from "../../types/product.types";
 import { updateBatchLineInList } from "./BatchDetail.state.utils";
+import { getEmptyBatchLine } from "../../utils/inventoryDefaults";
 
 export function useBatchDetailState(
   initialProduct: Product | null,
@@ -23,16 +24,17 @@ export function useBatchDetailState(
   }, []);*/
   const hydrateState = useCallback(
     (data: Product) => {
-      if (!data) return; // Protección extra
+      if (!data) return;
 
-      // Asignamos el producto (si es nuevo, al menos tiene el ID)
       setProduct(data);
 
-      // Aseguramos que batchLines sea siempre un array, incluso si viene undefined
-      const lines = data.batchLines || [];
-      setBatchLines(lines);
+      // Si el backend viene vacío (producto nuevo), inicializamos con una fila vacía para la UI
+      const lines =
+        data.batchLines && data.batchLines.length > 0
+          ? data.batchLines
+          : [getEmptyBatchLine()];
 
-      // Clonación profunda segura para el estado inicial
+      setBatchLines(lines);
       setInitialLines(JSON.parse(JSON.stringify(lines)));
     },
     [setProduct, setBatchLines, setInitialLines],

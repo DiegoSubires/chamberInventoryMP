@@ -173,6 +173,10 @@ export const Home: React.FC<HomeProps> = ({
     try {
       setLoading(true);
 
+      const productsToFinalize = state.products.filter(
+        (p) => p.batchLines && p.batchLines.length > 0,
+      );
+
       // LOG 2: Payload preparado (antes de enviarlo)
       console.log("📦 [Home] Payload a enviar:", {
         tenantId: userSession.tenantId,
@@ -185,7 +189,7 @@ export const Home: React.FC<HomeProps> = ({
         userSession.tenantId,
         workingDate,
         userSession.name,
-        state.products,
+        productsToFinalize,
       );
 
       // LOG 3: Éxito

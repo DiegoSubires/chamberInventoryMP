@@ -135,7 +135,7 @@ export const InventoryService = {
     });
   },*/
 
-  async saveProductBatches(
+  /*async saveProductBatches(
     tenantId: string,
     productId: string,
     workingDate: string,
@@ -174,6 +174,43 @@ export const InventoryService = {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
+    });
+  },*/
+  async saveProductBatches(
+    tenantId: string,
+    productId: string,
+    workingDate: string,
+    batchLines: BatchLine[],
+    operatorName?: string,
+  ): Promise<void> {
+    // FILTRO CRÍTICO: Si no hay lotes reales, no guardamos en la base de datos
+    // Esto evita persistir documentos vacíos si el usuario entró y salió sin contar nada
+    const activeLines = batchLines.filter(
+      (line) =>
+        line.quantity > 0 ||
+        line.crates > 0 ||
+        line.looseUnits > 0 ||
+        line.batch?.trim() !== "",
+    );
+
+    if (activeLines.length === 0) {
+      console.log(
+        "ℹ️ [Service] No hay datos válidos para guardar, operación omitida.",
+      );
+      return;
+    }
+
+    const endpoint = `/api/inventory/temporary?tenantId=${encodeURIComponent(tenantId)}`;
+
+    return apiClient(endpoint, {
+      method: "PUT",
+      body: JSON.stringify({
+        tenantId,
+        productId,
+        countDate: workingDate,
+        batchLines: activeLines, // Solo enviamos las líneas que tienen datos
+        operator: operatorName,
+      }),
     });
   },
 
