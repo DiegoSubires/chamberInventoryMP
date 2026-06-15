@@ -161,7 +161,13 @@ export const Home: React.FC<HomeProps> = ({
 
   // 1. Definimos la función usando 'state.products' que viene de useHomeState
   const handleFinalizeInventory = useCallback(async () => {
-    //console.log(`🚀 [Home] Iniciando finalización de jornada: ${workingDate} para ${userSession.tenantId}`);
+    console.log(
+      `🚀 [HomeAntesConfirmClose] Iniciando finalización de jornada: ${workingDate} para ${userSession.tenantId}`,
+    );
+    console.log(
+      "🚀 [Home] Iniciando finalización. Estado actual:",
+      state.products,
+    );
     const confirmClose = window.confirm(
       `⚠️ ¿Estás SEGURO de que deseas CERRAR definitivamente el recuento del día ${workingDate}?`,
     );
