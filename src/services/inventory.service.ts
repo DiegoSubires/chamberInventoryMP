@@ -401,7 +401,7 @@ export const InventoryService = {
     workingDate: string,
     operatorName: string,
   ): Promise<void> {
-    const endpoint = `/api/inventory/finalize`;
+    const endpoint = `/api/inventory/finalize?tenantId=${encodeURIComponent(tenantId)}`;
 
     return await apiClient(endpoint, {
       method: "POST",
