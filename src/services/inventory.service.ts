@@ -331,7 +331,7 @@ export const InventoryService = {
       "✅ [InventoryService] Inventario consolidado y jornada cerrada con éxito.",
     );
   }*/
-  async finalizeInventory(
+  /*async finalizeInventory(
     tenantId: string,
     workingDate: string,
     operatorName: string,
@@ -394,6 +394,24 @@ export const InventoryService = {
       );
       throw error; // Relanzamos para que el componente Home pueda manejar el alert
     }
+  },*/
+
+  async finalizeInventory(
+    tenantId: string,
+    workingDate: string,
+    operatorName: string,
+  ): Promise<void> {
+    const endpoint = `/api/inventory/finalize`;
+
+    return await apiClient(endpoint, {
+      method: "POST",
+      body: JSON.stringify({
+        tenantId,
+        countDate: workingDate,
+        operatorName,
+        comments: "Finalización desde interfaz",
+      }),
+    });
   },
 
   /**

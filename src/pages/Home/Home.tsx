@@ -161,83 +161,31 @@ export const Home: React.FC<HomeProps> = ({
 
   // 1. Definimos la función usando 'state.products' que viene de useHomeState
   const handleFinalizeInventory = useCallback(async () => {
-    console.log(
-      `🚀 [HomeAntesConfirmClose] Iniciando finalización de jornada: ${workingDate} para ${userSession.tenantId}`,
-    );
-    console.log(
-      "🚀 [Home] Iniciando finalización. Estado actual:",
-      state.products,
-    );
     const confirmClose = window.confirm(
       `⚠️ ¿Estás SEGURO de que deseas CERRAR definitivamente el recuento del día ${workingDate}?`,
     );
 
     if (!confirmClose) return;
 
-    console.log(
-      `🚀 [Home] Iniciando finalización de jornada: ${workingDate} para ${userSession.tenantId}`,
-    );
-
-    console.log("🔍 [Debug] Finalizando con:", {
-      tenantId,
-      productsCount: state.products?.length,
-    });
-
-    if (!tenantId || state.products.length === 0) {
-      console.error("⚠️ Datos insuficientes para finalizar");
-      return;
-    }
-
     try {
       setLoading(true);
 
-      const productsToFinalize = state.products.filter((p) => {
-        const hasBatches = p.batchLines && p.batchLines.length > 0;
-        if (!hasBatches) {
-          // Si este log aparece 113 veces, ahí tienes el problema
-          console.log(`⚠️ Producto ${p.id} no tiene batchLines`, p);
-        }
-        return hasBatches;
-      });
-
-      // LOG 2: Payload preparado (antes de enviarlo)
-      console.log("📦 [Home] Payload a enviar:", {
-        tenantId: tenantId,
-        date: workingDate,
-        productsCount: state.products.length,
-      });
-
-      // 2. Usamos state.products en lugar de una variable inexistente
+      // Llamamos al servicio solo con los datos básicos
       await InventoryService.finalizeInventory(
-        tenantId,
+        tenantId, // Asegúrate de tener este tenantId disponible
         workingDate,
         userSession.name,
-        productsToFinalize,
       );
 
-      // LOG 3: Éxito
-      console.log("✅ [Home] Backend respondió con éxito. Recargando...");
-
-      alert(`✅ Jornada consolidada con éxito.`);
+      alert("✅ Jornada finalizada y datos consolidados.");
       window.location.reload();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      // LOG 4: Error detallado
-      console.error("❌ [Home] Error capturado en finalizeInventory:", error);
-      alert(
-        `🚨 Error: ${error.message || "No se pudo conectar con el servidor."}`,
-      );
+      console.error("❌ Error en finalización:", error);
+      alert(`🚨 Error al finalizar: ${error.message}`);
     } finally {
       setLoading(false);
     }
-  }, [
-    workingDate,
-    userSession.tenantId,
-    userSession.name,
-    state.products,
-    setLoading,
-    tenantId,
-  ]);
+  }, [tenantId, workingDate, userSession.name, setLoading]);
 
   /*useEffect(() => {
     onRegisterFinalizeAction(handleFinalizeInventory);
