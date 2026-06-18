@@ -406,7 +406,6 @@ export const InventoryService = {
     return await apiClient(endpoint, {
       method: "POST",
       body: JSON.stringify({
-        tenantId,
         countDate: workingDate,
         operatorName,
         comments: "Finalización desde interfaz",
