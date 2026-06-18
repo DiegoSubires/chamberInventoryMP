@@ -179,6 +179,7 @@ export const Home: React.FC<HomeProps> = ({
 
       alert("✅ Jornada finalizada y datos consolidados.");
       window.location.reload();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("❌ Error en finalización:", error);
       alert(`🚨 Error al finalizar: ${error.message}`);
