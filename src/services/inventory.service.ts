@@ -470,8 +470,39 @@ export const InventoryService = {
   /**
    * Retorna la URL directa de descarga física del archivo
    */
-  getExportUrl(tenantId: string, workingDate: string): string {
+  /*getExportUrl(tenantId: string, workingDate: string): string {
     return `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+  },*/
+  async downloadExcel(tenantId: string, workingDate: string): Promise<void> {
+    const token = localStorage.getItem("token"); // O de donde obtengas tu token
+    const endpoint = `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+
+    const response = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("No se pudo descargar el archivo");
+    }
+
+    // Convertir la respuesta a un Blob (objeto binario)
+    const blob = await response.blob();
+
+    // Crear una URL temporal para el objeto
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Stock_${workingDate}_${tenantId}.csv`;
+    document.body.appendChild(a);
+    a.click();
+
+    // Limpieza
+    a.remove();
+    window.URL.revokeObjectURL(url);
   },
 
   /**
