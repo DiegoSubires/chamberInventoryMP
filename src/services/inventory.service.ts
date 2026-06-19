@@ -471,7 +471,7 @@ export const InventoryService = {
    * Retorna la URL directa de descarga física del archivo
    */
   getExportUrl(tenantId: string, workingDate: string): string {
-    return `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenant=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
+    return `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
   },
 
   /**
