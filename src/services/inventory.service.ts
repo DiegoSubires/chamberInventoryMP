@@ -474,7 +474,7 @@ export const InventoryService = {
     return `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
   },*/
   async downloadExcel(tenantId: string, workingDate: string): Promise<void> {
-    const token = localStorage.getItem("token"); // O de donde obtengas tu token
+    const token = localStorage.getItem("tracesync_token");
     const endpoint = `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
 
     const response = await fetch(endpoint, {
