@@ -193,14 +193,26 @@ export const Home: React.FC<HomeProps> = ({
   }, [handleFinalizeInventory, onRegisterFinalizeAction]);*/
 
   // Acción de Descarga Directa
-  const handleDownloadExcel = useCallback(async () => {
+  /*const handleDownloadExcel = useCallback(async () => {
     const downloadUrl = InventoryService.getExportUrl(
       userSession.tenantId,
       workingDate,
     );
     // Dispara la descarga transparente en el navegador/Electron
     window.location.href = downloadUrl;
-  }, [workingDate, userSession.tenantId]);
+  }, [workingDate, userSession.tenantId]);*/
+
+  const handleDownloadExcel = useCallback(async () => {
+    try {
+      setLoading(true); // Opcional: muestra un spinner mientras se genera el archivo
+      await InventoryService.downloadExcel(userSession.tenantId, workingDate);
+    } catch (error) {
+      console.error("Error en descarga:", error);
+      alert("🚨 Error al descargar el archivo Excel.");
+    } finally {
+      setLoading(false);
+    }
+  }, [workingDate, userSession.tenantId, setLoading]);
 
   // 🎯 Notifica y suscribe dinámicamente el botón global del Layout según el estado del día
   useEffect(() => {
