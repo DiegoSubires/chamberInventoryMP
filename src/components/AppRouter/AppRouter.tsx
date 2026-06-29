@@ -32,7 +32,7 @@ export function AppRouter({
   filters,
   setFilters,
 }: AppRouterProps) {
-  console.log("🟡 [AppRouter.tsx] Filtros recibidos:", filters);
+  //console.log("🟡 [AppRouter.tsx] Filtros recibidos:", filters);
 
   return (
     <div className={styles.routerWrapper}>

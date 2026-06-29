@@ -477,6 +477,8 @@ export const InventoryService = {
     const token = localStorage.getItem("tracesync_token");
     const endpoint = `${import.meta.env.VITE_API_URL}/api/inventory/export-excel?tenantId=${encodeURIComponent(tenantId)}&date=${encodeURIComponent(workingDate)}`;
 
+    console.log("🚀 [DEBUG FRONTEND] Llamando a endpoint:", endpoint);
+
     const response = await fetch(endpoint, {
       method: "GET",
       headers: {
@@ -485,7 +487,16 @@ export const InventoryService = {
       },
     });
 
+    /*if (!response.ok) {
+      throw new Error("No se pudo descargar el archivo");
+    }*/
     if (!response.ok) {
+      const errorText = await response.text(); // Ver qué mensaje devuelve el servidor
+      console.error(
+        "❌ [DEBUG FRONTEND] Respuesta error del servidor:",
+        response.status,
+        errorText,
+      );
       throw new Error("No se pudo descargar el archivo");
     }
 

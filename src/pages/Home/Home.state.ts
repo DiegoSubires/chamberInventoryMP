@@ -100,7 +100,7 @@ export const useHomeViewModel = (
     });
   }, [state.products, filters.activeCategory, filters.activeSubcategory]);
 
-  /*/ 3. Acciones que usan el setFilters del padre (App.tsx)
+  // 3. Acciones que usan el setFilters del padre (App.tsx)
   const setActiveCategory = (category: string) => {
     setFilters((prev) => ({
       ...prev,
@@ -109,11 +109,11 @@ export const useHomeViewModel = (
     }));
   };
 
-  const setActiveSubcategory = (subcategory: string) => {
+  const setActiveSubCategory = (subcategory: string) => {
     setFilters((prev) => ({ ...prev, activeSubcategory: subcategory }));
-  };*/
+  };
 
-  const setActiveCategory = (cat: string) => {
+  /*const setActiveCategory = (cat: string) => {
     console.log("🔵 [Home.state.ts] Intentando cambiar categoría a:", cat);
     setFilters((prev: FilterState) => {
       const newState = {
@@ -139,7 +139,7 @@ export const useHomeViewModel = (
       console.log("🔵 [Home.state.ts] Nuevo estado calculado:", newState);
       return newState;
     });
-  };
+  };*/
 
   return {
     filteredProducts,
