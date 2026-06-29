@@ -9,6 +9,7 @@ import { type ScreenView } from "../../components/AppRouter/AppRouter";
 import { InventoryService } from "../../services/inventory.service";
 import styles from "./Home.module.scss";
 import { type Product } from "../../types/product.types";
+import { type FilterState } from "../../types/filter.types";
 
 interface HomeProps {
   userSession: {
@@ -22,6 +23,8 @@ interface HomeProps {
     fn: () => Promise<void>,
     isClosed: boolean,
   ) => void;
+  filters: { activeCategory: string | null; activeSubcategory: string | null };
+  setFilters: (f: FilterState) => void;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -29,6 +32,8 @@ export const Home: React.FC<HomeProps> = ({
   tenantId,
   onNavigate,
   onRegisterFinalizeAction,
+  filters,
+  setFilters,
 }) => {
   const [isLandscape, setIsLandscape] = useState(
     window.innerWidth > window.innerHeight,
@@ -61,11 +66,19 @@ export const Home: React.FC<HomeProps> = ({
   const {
     filteredProducts,
     availableSubcategories,
-    activeSubcategory,
+    /*activeSubcategory,
     setActiveCategory,
-    setActiveSubcategory,
+    setActiveSubcategory,*/
     loading,
   } = useHomeViewModel(state, setState);
+
+  const setActiveCategory = (cat: string) => {
+    setFilters({ activeCategory: cat, activeSubcategory: null });
+  };
+
+  const setActiveSubcategory = (sub: string) => {
+    setFilters({ ...filters, activeSubcategory: sub });
+  };
 
   // 🔄 2. Inyección del Hook de Efectos (Escucha cambios de Planta y de Fecha)
   useHomeEffects(userSession.tenantId, workingDate, setLoading, setProducts);
@@ -248,16 +261,20 @@ export const Home: React.FC<HomeProps> = ({
       {/* Catálogo Maestro Dinámico */}
       <div className={styles.mainCatalogContent}>
         <CategoryFilter
-          categories={["Frescos Granel", "Frescos Pequeña"]}
-          activeCategory={state.activeCategory}
+          activeCategory={filters.activeCategory || ""}
           onSelect={setActiveCategory}
+          categories={["Frescos Granel", "Frescos Pequeña"]}
+          //activeCategory={state.activeCategory}
+          //onSelect={setActiveCategory}
         />
 
         {availableSubcategories.length > 0 && (
           <SubcategoryFilter
             subcategories={availableSubcategories}
-            activeSubcategory={activeSubcategory || ""}
+            activeSubcategory={filters.activeSubcategory || ""}
             onSelect={setActiveSubcategory}
+            //activeSubcategory={activeSubcategory || ""}
+            //onSelect={setActiveSubcategory}
           />
         )}
 

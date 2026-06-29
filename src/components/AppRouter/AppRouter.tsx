@@ -15,6 +15,13 @@ interface AppRouterProps {
     isClosed: boolean,
   ) => void;
   onRegisterSaveAction: (fn: () => Promise<void>) => void;
+  filters: { activeCategory: string | null; activeSubcategory: string | null };
+  setFilters: React.Dispatch<
+    React.SetStateAction<{
+      activeCategory: string | null;
+      activeSubcategory: string | null;
+    }>
+  >;
 }
 
 export type ScreenView = "CATALOG" | "BATCH_DETAIL";
@@ -26,6 +33,8 @@ export function AppRouter({
   onNavigate,
   onRegisterFinalizeAction,
   onRegisterSaveAction,
+  filters,
+  setFilters,
 }: AppRouterProps) {
   return (
     <div className={styles.routerWrapper}>
@@ -35,6 +44,8 @@ export function AppRouter({
           tenantId={userSession.tenantId}
           onNavigate={onNavigate}
           onRegisterFinalizeAction={onRegisterFinalizeAction}
+          filters={filters}
+          setFilters={setFilters}
         />
       ) : (
         <BatchDetail

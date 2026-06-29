@@ -4,6 +4,7 @@ import { LayoutApp } from "./components";
 import { type HeaderAction } from "./components/Layout/LayoutApp.vm";
 import { AppRouter, type ScreenView } from "./components/AppRouter/AppRouter";
 import { type UserSession } from "./types/auth.types";
+import { type FilterState } from "./types/filter.types";
 
 /*onst getCookie = (name: string): string => {
   const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
@@ -59,6 +60,11 @@ export default function App() {
     (() => Promise<void>) | null
   >(null);
   const [isDayClosed, setIsDayClosed] = useState<boolean>(false);
+
+  const [filterState, setFilterState] = useState<FilterState>({
+    activeCategory: "Frescos Granel", // o null
+    activeSubcategory: null as string | null,
+  });
 
   const handleLogout = () => {
     window.location.replace(URLS.HUB);
@@ -138,6 +144,8 @@ export default function App() {
         onRegisterSaveAction={(fn) => {
           setSaveBatchLinesFn(() => fn);
         }}
+        filters={filterState}
+        setFilters={setFilterState}
       />
     </LayoutApp>
   );
