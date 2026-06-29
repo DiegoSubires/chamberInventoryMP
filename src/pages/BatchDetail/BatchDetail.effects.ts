@@ -36,7 +36,7 @@ export function useBatchDetailEffects({
             workingDate,
           );
 
-        console.log("🔍 [Debug] Producto recibido:", fetchedProduct);
+        //console.log("🔍 [Debug] Producto recibido:", fetchedProduct);
 
         if (!fetchedProduct) {
           console.error(
@@ -62,10 +62,10 @@ export function useBatchDetailEffects({
             ),
           };
 
-          console.log(
+          /*console.log(
             "🔍 [2. Datos pasando a hydrateState]:",
             productToHydrate,
-          );
+          );*/
           hydrateState(productToHydrate as Product);
         }
       } catch (error) {
