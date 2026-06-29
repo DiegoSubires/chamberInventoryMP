@@ -121,6 +121,8 @@ export default function App() {
     }
   };
 
+  console.log("🟢 [App.tsx] Estado actual de filtros:", filterState);
+
   return (
     <LayoutApp
       tenantId={session.tenantId}

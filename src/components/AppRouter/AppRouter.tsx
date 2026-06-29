@@ -3,6 +3,7 @@
 import { Home } from "../../pages/Home/Home";
 import BatchDetail from "../../pages/BatchDetail/BatchDetail";
 import { type UserSession } from "../../types/auth.types";
+import { type FilterState } from "../../types/filter.types";
 import styles from "./AppRouter.module.scss";
 
 interface AppRouterProps {
@@ -16,12 +17,7 @@ interface AppRouterProps {
   ) => void;
   onRegisterSaveAction: (fn: () => Promise<void>) => void;
   filters: { activeCategory: string | null; activeSubcategory: string | null };
-  setFilters: React.Dispatch<
-    React.SetStateAction<{
-      activeCategory: string | null;
-      activeSubcategory: string | null;
-    }>
-  >;
+  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
 }
 
 export type ScreenView = "CATALOG" | "BATCH_DETAIL";
@@ -36,6 +32,8 @@ export function AppRouter({
   filters,
   setFilters,
 }: AppRouterProps) {
+  console.log("🟡 [AppRouter.tsx] Filtros recibidos:", filters);
+
   return (
     <div className={styles.routerWrapper}>
       {currentScreen === "CATALOG" ? (

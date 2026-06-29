@@ -21,9 +21,9 @@ export default function BatchDetail({
   // Inicializamos el hook de estado
   const state = useBatchDetailState(null, operatorName || "Invitado");
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("🔍 [3. Estado actual en el componente]:", state);
-  }, [state]);
+  }, [state]);*/
 
   const workingDate =
     localStorage.getItem("chamber_inventory_working_date") ||

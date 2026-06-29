@@ -24,7 +24,8 @@ interface HomeProps {
     isClosed: boolean,
   ) => void;
   filters: { activeCategory: string | null; activeSubcategory: string | null };
-  setFilters: (f: FilterState) => void;
+  //setFilters: (f: FilterState) => void;
+  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -35,6 +36,8 @@ export const Home: React.FC<HomeProps> = ({
   filters,
   setFilters,
 }) => {
+  console.log("🔴 [Home.tsx] Filtros recibidos:", filters);
+
   const [isLandscape, setIsLandscape] = useState(
     window.innerWidth > window.innerHeight,
   );
@@ -72,13 +75,13 @@ export const Home: React.FC<HomeProps> = ({
     loading,
   } = useHomeViewModel(state, setState);
 
-  const setActiveCategory = (cat: string) => {
+  /*const setActiveCategory = (cat: string) => {
     setFilters({ activeCategory: cat, activeSubcategory: null });
   };
 
   const setActiveSubcategory = (sub: string) => {
     setFilters({ ...filters, activeSubcategory: sub });
-  };
+  };*/
 
   // 🔄 2. Inyección del Hook de Efectos (Escucha cambios de Planta y de Fecha)
   useHomeEffects(userSession.tenantId, workingDate, setLoading, setProducts);
@@ -241,6 +244,33 @@ export const Home: React.FC<HomeProps> = ({
     onRegisterFinalizeAction,
   ]);
 
+  const setActiveCategory = (cat: string) => {
+    console.log("🔵 [Home.tsx] Intentando cambiar categoría a:", cat);
+    setFilters((prev: FilterState) => {
+      const newState = {
+        ...prev,
+        activeCategory: cat,
+        activeSubcategory: null, // Al cambiar de categoría, reseteamos la subcategoría
+      };
+      console.log("🔵 [Home.tsx] Nuevo estado calculado:", newState);
+      return newState;
+    });
+  };
+
+  const setActiveSubCategory = (subcat: string) => {
+    console.log("🔵 [Home.tsx] Intentando cambiar subcategoría a:", subcat);
+    setFilters((prev: FilterState) => {
+      const newState = {
+        ...prev,
+        // ¡IMPORTANTE! No pongas activeCategory: null
+        // Al usar ...prev, ya mantenemos la categoría actual
+        activeSubcategory: subcat,
+      };
+      console.log("🔵 [Home.tsx] Nuevo estado calculado:", newState);
+      return newState;
+    });
+  };
+
   return (
     <div className={styles.homeContainer}>
       {/* Barra de Herramientas Superior: Ahora solo conserva el selector de fecha */}
@@ -272,7 +302,7 @@ export const Home: React.FC<HomeProps> = ({
           <SubcategoryFilter
             subcategories={availableSubcategories}
             activeSubcategory={filters.activeSubcategory || ""}
-            onSelect={setActiveSubcategory}
+            onSelect={setActiveSubCategory}
             //activeSubcategory={activeSubcategory || ""}
             //onSelect={setActiveSubcategory}
           />
