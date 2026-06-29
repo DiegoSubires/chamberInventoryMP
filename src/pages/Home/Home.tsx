@@ -69,11 +69,11 @@ export const Home: React.FC<HomeProps> = ({
   const {
     filteredProducts,
     availableSubcategories,
-    /*activeSubcategory,
     setActiveCategory,
-    setActiveSubcategory,*/
+    setActiveSubCategory,
+    activeSubcategory,
     loading,
-  } = useHomeViewModel(state, setState);
+  } = useHomeViewModel(state, filters, setFilters);
 
   /*const setActiveCategory = (cat: string) => {
     setFilters({ activeCategory: cat, activeSubcategory: null });
@@ -244,33 +244,6 @@ export const Home: React.FC<HomeProps> = ({
     onRegisterFinalizeAction,
   ]);
 
-  const setActiveCategory = (cat: string) => {
-    console.log("🔵 [Home.tsx] Intentando cambiar categoría a:", cat);
-    setFilters((prev: FilterState) => {
-      const newState = {
-        ...prev,
-        activeCategory: cat,
-        activeSubcategory: null, // Al cambiar de categoría, reseteamos la subcategoría
-      };
-      console.log("🔵 [Home.tsx] Nuevo estado calculado:", newState);
-      return newState;
-    });
-  };
-
-  const setActiveSubCategory = (subcat: string) => {
-    console.log("🔵 [Home.tsx] Intentando cambiar subcategoría a:", subcat);
-    setFilters((prev: FilterState) => {
-      const newState = {
-        ...prev,
-        // ¡IMPORTANTE! No pongas activeCategory: null
-        // Al usar ...prev, ya mantenemos la categoría actual
-        activeSubcategory: subcat,
-      };
-      console.log("🔵 [Home.tsx] Nuevo estado calculado:", newState);
-      return newState;
-    });
-  };
-
   return (
     <div className={styles.homeContainer}>
       {/* Barra de Herramientas Superior: Ahora solo conserva el selector de fecha */}
@@ -291,20 +264,16 @@ export const Home: React.FC<HomeProps> = ({
       {/* Catálogo Maestro Dinámico */}
       <div className={styles.mainCatalogContent}>
         <CategoryFilter
+          categories={["Frescos Granel", "Frescos Pequeña"]}
           activeCategory={filters.activeCategory || ""}
           onSelect={setActiveCategory}
-          categories={["Frescos Granel", "Frescos Pequeña"]}
-          //activeCategory={state.activeCategory}
-          //onSelect={setActiveCategory}
         />
 
         {availableSubcategories.length > 0 && (
           <SubcategoryFilter
             subcategories={availableSubcategories}
-            activeSubcategory={filters.activeSubcategory || ""}
+            activeSubcategory={activeSubcategory || ""}
             onSelect={setActiveSubCategory}
-            //activeSubcategory={activeSubcategory || ""}
-            //onSelect={setActiveSubcategory}
           />
         )}
 

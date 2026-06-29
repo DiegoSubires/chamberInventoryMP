@@ -39,15 +39,15 @@ export function useBatchDetailState(
           ? data.batchLines
           : [{ ...getEmptyBatchLine(), id: crypto.randomUUID() }];
 
-      console.log("🔍 [HydDebug2] Líneas preparadas para el estado:", lines);
+      //console.log("🔍 [HydDebug2] Líneas preparadas para el estado:", lines);
 
       setBatchLines(lines);
       setInitialLines(JSON.parse(JSON.stringify(lines)));
 
-      console.log(
+      /*console.log(
         "🔍 [HydDebug3] Estado actualizado. ¿Es la primera línea editable?",
         lines[0],
-      );
+      );*/
     },
     [setProduct, setBatchLines, setInitialLines],
   );
